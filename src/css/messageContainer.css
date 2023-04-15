@@ -1,0 +1,5 @@
+.messageContainerHover:hover {
+  background-color: #313439;
+  color: "#fff";
+  /* border-radius: 10px; */
+}

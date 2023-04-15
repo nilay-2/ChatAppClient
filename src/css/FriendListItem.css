@@ -1,0 +1,20 @@
+.FriendListItemContainer:hover {
+  background-color: #2b2e37;
+}
+
+.FriendListItemContainer {
+  margin: 4px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remove-participant {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
