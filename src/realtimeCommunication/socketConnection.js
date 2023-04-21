@@ -43,12 +43,13 @@ export const connectWithSocketServer = (userDetails) => {
 };
 
 export const directMessageHandler = (data) => {
-  socket.emit("directMessage", data);
+  // console.log(data);
+  socket?.emit("directMessage", data);
 };
 
 export const getRealTimeChatUpdates = () => {
-  socket.on("realTimeChatUpdate", (data) => {
-    console.log(data);
+  socket?.on("realTimeChatUpdate", (data) => {
+    // console.log(data);
     store.dispatch(setMessages(data));
   });
 };
