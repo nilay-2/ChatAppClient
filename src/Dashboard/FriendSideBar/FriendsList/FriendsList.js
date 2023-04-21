@@ -21,16 +21,16 @@ function FriendsList({ friends, onlineFriends, onlineUsers }) {
   //   store.dispatch(setOnlineUsers(onlineUsers));
   //   store.dispatch(checkIfFriendIsOnline());
   // }, [onlineUsers]);
-
   return (
     <MainContainer>
-      {onlineFriends?.map((f) => {
+      {onlineFriends?.map((f, i) => {
         return (
           <FriendsListItem
-            username={f.friendId.name}
+            username={f.friendId?.name}
             isOnline={f?.isOnline}
-            id={f.friendId._id}
-            key={f.friendId._id}
+            id={f.friendId?._id}
+            // key={f.friendId._id}
+            key={i}
           />
         );
       })}

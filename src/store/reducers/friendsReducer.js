@@ -28,7 +28,7 @@ const reducer = (state = initState, action) => {
     case friendsActions.SET_ONLINE_FRIENDS:
       const myOnlineFriends = state.friends.map((frnd) => {
         const f = state.onlineUsers.find(
-          (onlnUser) => onlnUser.userId === frnd.friendId._id
+          (onlnUser) => onlnUser.userId === frnd.friendId?._id
         );
         // cannot directly mutate state like we have did below (commented code ) in redux
         // frnd.isOnline = f ? true : false
