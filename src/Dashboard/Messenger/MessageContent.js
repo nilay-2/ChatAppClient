@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import NewMessageInput from "./NewMessageInput";
 import Messages from "./Messages";
@@ -17,6 +17,8 @@ function MessageContent({
   messages,
   getInitialChatHistory,
 }) {
+  const [submit, setSubmit] = useState(false);
+
   useEffect(() => {
     // clear messages when chaning chats
     clearMessagesBeforeNextChat();
@@ -28,10 +30,22 @@ function MessageContent({
     getRealTimeChatUpdates();
   }, [chosenChatDetails]);
 
+  const changeSubmitState = () => {
+    setSubmit(!submit);
+  };
+
+  useEffect(() => {
+    const author = store.getState().auth.userDetails?._id;
+    // get chat history for the selected conversation
+    getInitialChatHistory({ author, receiver: chosenChatDetails.id });
+    // get real time updates for the selected conversation
+    getRealTimeChatUpdates();
+  }, [submit]);
+
   return (
     <Wrapper>
       <Messages chosenChatDetails={chosenChatDetails} messages={messages} />
-      <NewMessageInput />
+      <NewMessageInput changeSubmitState={changeSubmitState} />
     </Wrapper>
   );
 }

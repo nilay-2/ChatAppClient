@@ -12,7 +12,7 @@ const Input = styled("input")({
   borderRadius: "15px",
 });
 
-function NewMessageInput({ chosenChatDetails }) {
+function NewMessageInput({ chosenChatDetails, changeSubmitState }) {
   const [message, setMessage] = useState("");
 
   const handleOnChange = (e) => {
@@ -27,6 +27,8 @@ function NewMessageInput({ chosenChatDetails }) {
         date: new Date(),
       };
       directMessageHandler(data);
+      changeSubmitState();
+
       clearInput();
     }
   };
