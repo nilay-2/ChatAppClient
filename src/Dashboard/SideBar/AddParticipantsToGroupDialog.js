@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import Avatar from "../../shared/components/Avatar";
 import "../../css/FriendListItem.css";
+import { validateCreateGroupChatForm } from "../../shared/utils/validateCreateGroupChatForm";
 import axios from "axios";
 const ContentWrapper = styled("div")({
   width: "420px",
@@ -68,6 +69,7 @@ const AddParticipantsToGroupDialog = ({
   const [searchByQuery, setSearchByQuery] = useState([]);
   const [groupName, setGroupName] = useState("");
   const [query, setQuery] = useState("");
+  const [disabled, setDisabled] = useState(true);
   // initial fetch to get the friends of the current users
   useEffect(() => {
     const getFriends = async () => {
@@ -83,7 +85,7 @@ const AddParticipantsToGroupDialog = ({
   }, []);
   // search friends by their name to add in group chat
   useEffect(() => {
-    if (query.length > 0) {
+    if (query !== "") {
       const nameRegex = new RegExp(`${query}`);
       const filterByName = friends.filter((val) => {
         if (val.friendId.name.match(nameRegex)) return val;
@@ -91,6 +93,11 @@ const AddParticipantsToGroupDialog = ({
       setSearchByQuery(filterByName);
     }
   }, [query]);
+
+  // function for disabling the 'create' button if the groupname and participants is empty
+  useEffect(() => {
+    setDisabled(validateCreateGroupChatForm({ groupName, friendsAdded }));
+  }, [groupName, friendsAdded]);
 
   // function to add friend
   const addFriendHandler = (friend) => {
@@ -122,9 +129,10 @@ const AddParticipantsToGroupDialog = ({
   };
   // if query length is 0 then return all friends else return the array of friends that is filtered by names
   const frndsArr = (query) => {
-    if (query.length === 0) return friends;
+    if (query === "") return friends;
     else return searchByQuery;
   };
+
   return (
     <Dialog open={isDialogOpen} onClose={closeDialogBoxHandler}>
       <DialogTitle sx={{ backgroundColor: "#24272e" }}>
@@ -195,6 +203,12 @@ const AddParticipantsToGroupDialog = ({
             })}
           </FriendsList>
         </ContentWrapper>
+        <button
+          className={`btn btn-${disabled ? "dark" : "primary"} d-block mx-auto`}
+          disabled={disabled}
+        >
+          Create
+        </button>
       </DialogContent>
     </Dialog>
   );
