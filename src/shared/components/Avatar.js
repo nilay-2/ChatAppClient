@@ -18,7 +18,9 @@ const AvatarPreview = styled("div")({
 export default function Avatar({ username, large }) {
   return (
     <AvatarPreview style={large ? { height: "80px", width: "80px" } : {}}>
-      {username.substring(0, 2)}
+      {username !== undefined && username !== null
+        ? username.substring(0, 2)
+        : ""}
     </AvatarPreview>
   );
 }
