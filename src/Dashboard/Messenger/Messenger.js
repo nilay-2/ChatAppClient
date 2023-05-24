@@ -14,15 +14,24 @@ const MainContainer = styled("div")({
   flexDirection: "column",
 });
 
-function Messenger({ chosenChatDetails }) {
+function Messenger({ chosenChatDetails, chatType, messages }) {
   return (
     <MainContainer>
       <AppBar />
 
       {chosenChatDetails ? (
         <>
-          <MessageHeader name={chosenChatDetails?.username} />
-          <MessageContent chosenChatDetails={chosenChatDetails} />
+          {chatType === "DIRECT" ? (
+            <>
+              <MessageHeader name={chosenChatDetails?.username} />
+              <MessageContent chosenChatDetails={chosenChatDetails} />
+            </>
+          ) : (
+            <>
+              <MessageHeader name={chosenChatDetails?.groupName} />
+              <MessageContent chosenChatDetails={chosenChatDetails} />
+            </>
+          )}
         </>
       ) : (
         <WelcomeMessage />

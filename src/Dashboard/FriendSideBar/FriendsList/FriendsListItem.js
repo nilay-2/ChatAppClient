@@ -6,7 +6,14 @@ import { Typography } from "@mui/material";
 import OnlineIndicator from "./OnlineIndicator";
 import { getActions } from "../../../store/actions/chatActions";
 import { connect } from "react-redux";
-function FriendsListItem({ isOnline, username, id, setChosenChatDetails }) {
+function FriendsListItem({
+  disabled = false,
+  isOnline,
+  username,
+  id,
+  setChosenChatDetails,
+  currentUserId = "",
+}) {
   const handleChatDetails = () => {
     setChosenChatDetails({ id, username }, "DIRECT");
   };
@@ -14,6 +21,7 @@ function FriendsListItem({ isOnline, username, id, setChosenChatDetails }) {
   return (
     <div>
       <Button
+        disabled={disabled}
         onClick={handleChatDetails}
         id={id}
         style={{
@@ -38,7 +46,7 @@ function FriendsListItem({ isOnline, username, id, setChosenChatDetails }) {
           variant="subtitle1"
           align="left"
         >
-          {username}
+          {id === currentUserId ? "You" : username}
         </Typography>
         {isOnline ? <OnlineIndicator /> : ""}
       </Button>

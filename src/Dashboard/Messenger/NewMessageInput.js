@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { styled } from "@mui/system";
 import { connect } from "react-redux";
-import { directMessageHandler } from "../../realtimeCommunication/socketConnection";
+import {
+  directMessageHandler,
+  sendGroupMessage,
+} from "../../realtimeCommunication/socketConnection";
 const Input = styled("input")({
   backgroundColor: "#202225",
   color: "#fff",
@@ -12,7 +15,7 @@ const Input = styled("input")({
   borderRadius: "15px",
 });
 
-function NewMessageInput({ chosenChatDetails, changeSubmitState }) {
+function NewMessageInput({ chosenChatDetails, changeSubmitState, chatType }) {
   const [message, setMessage] = useState("");
 
   const handleOnChange = (e) => {
@@ -21,14 +24,23 @@ function NewMessageInput({ chosenChatDetails, changeSubmitState }) {
 
   const handleOnKeyDown = (e) => {
     if (e.key === "Enter") {
-      const data = {
-        content: message,
-        receiverId: chosenChatDetails.id,
-        date: new Date(),
-      };
-      directMessageHandler(data);
-      changeSubmitState();
-
+      if (chatType === "DIRECT") {
+        const data = {
+          chatType,
+          content: message,
+          receiverId: chosenChatDetails.id,
+          date: new Date(),
+        };
+        directMessageHandler(data);
+        changeSubmitState();
+      } else if (chatType === "GROUP") {
+        const data = {
+          ...chosenChatDetails,
+          date: new Date(),
+          content: message,
+        };
+        sendGroupMessage(data);
+      }
       clearInput();
     }
   };
@@ -39,7 +51,11 @@ function NewMessageInput({ chosenChatDetails, changeSubmitState }) {
 
   return (
     <Input
-      placeholder={`Message @${chosenChatDetails.username}`}
+      placeholder={
+        chatType === "DIRECT"
+          ? `Message @${chosenChatDetails.username}`
+          : `Message @${chosenChatDetails.groupName}`
+      }
       value={message}
       onChange={handleOnChange}
       onKeyDown={handleOnKeyDown}

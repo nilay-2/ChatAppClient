@@ -16,18 +16,24 @@ function MessageContent({
   chosenChatDetails,
   messages,
   getInitialChatHistory,
+  getInitialGroupChatHistory,
+  chatType,
 }) {
   const [submit, setSubmit] = useState(false);
-
   useEffect(() => {
-    // clear messages when chaning chats
-    clearMessagesBeforeNextChat();
-    // prepare data for fetching chats
-    const author = store.getState().auth.userDetails?._id;
-    // get chat history for the selected conversation
-    getInitialChatHistory({ author, receiver: chosenChatDetails.id });
-    // get real time updates for the selected conversation
-    getRealTimeChatUpdates();
+    if (chatType === "DIRECT") {
+      // clear messages when chaning chats
+      clearMessagesBeforeNextChat();
+      // prepare data for fetching chats
+      const author = store.getState().auth.userDetails?._id;
+      // get chat history for the selected conversation
+      getInitialChatHistory({ author, receiver: chosenChatDetails.id });
+      // get real time updates for the selected conversation
+      getRealTimeChatUpdates();
+    } else {
+      clearMessagesBeforeNextChat();
+      getInitialGroupChatHistory(chosenChatDetails._id);
+    }
   }, [chosenChatDetails]);
 
   const changeSubmitState = () => {
@@ -35,13 +41,16 @@ function MessageContent({
   };
 
   useEffect(() => {
-    const author = store.getState().auth.userDetails?._id;
-    // get chat history for the selected conversation
-    getInitialChatHistory({ author, receiver: chosenChatDetails.id });
-    // get real time updates for the selected conversation
-    getRealTimeChatUpdates();
+    if (chatType === "DIRECT") {
+      const author = store.getState().auth.userDetails?._id;
+      // get chat history for the selected conversation
+      getInitialChatHistory({ author, receiver: chosenChatDetails.id });
+      // get real time updates for the selected conversation
+      getRealTimeChatUpdates();
+    } else {
+      getInitialGroupChatHistory(chosenChatDetails._id);
+    }
   }, [submit]);
-
   return (
     <Wrapper>
       <Messages chosenChatDetails={chosenChatDetails} messages={messages} />

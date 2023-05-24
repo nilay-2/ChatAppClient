@@ -42,6 +42,8 @@ const SameAuthorMessageContent = styled("div")({
   color: "#dcddde",
   width: "97%",
   padding: "4px 0",
+  display: "flex",
+  justifyContent: "space-between",
 });
 
 const SameAuthorMessageText = styled("div")({
@@ -105,6 +107,9 @@ const Message = ({ id, content, sameAuthor, username, date, sameDay }) => {
           </span>
           {content}
         </SameAuthorMessageText>
+        <span style={{ display: "block", position: "relative" }}>
+          {hover ? <MessageMenu /> : ""}
+        </span>
       </SameAuthorMessageContent>
     );
   }
