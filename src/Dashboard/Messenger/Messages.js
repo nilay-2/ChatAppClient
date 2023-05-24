@@ -19,6 +19,7 @@ function Messages({ chosenChatDetails, messages }) {
   // console.log("date of previous element", messages[-1]?.date);
   // if (messages[0]?.date === messages[-1]?.date) console.log(true);
   // else console.log(false);
+
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -47,9 +48,9 @@ function Messages({ chosenChatDetails, messages }) {
         return (
           <Message
             key={i}
-            id={msg._id}
-            username={msg.author.name}
-            content={msg.content}
+            id={msg?._id}
+            username={msg.author?.name}
+            content={msg?.content}
             sameAuthor={sameAuthor}
             date={msg?.date}
             sameDay={sameDay}

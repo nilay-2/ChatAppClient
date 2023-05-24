@@ -4,6 +4,8 @@ import DropDownMenu from "./DropDownMenu";
 import ChatLabel from "./ChatLabel";
 import Notifications from "./Notifications";
 import MessagePin from "./MessagePin";
+import GroupParticipants from "./GroupParticipants";
+import { connect } from "react-redux";
 const MainContainer = styled("div")({
   height: "48px",
   borderBottom: "1px solid black",
@@ -21,15 +23,30 @@ const optionsContainerStyle = {
   alignItems: "center",
 };
 
-export default function AppBar() {
+function AppBar({ chatType, chosenChatDetails }) {
   return (
     <MainContainer>
       <ChatLabel />
       <div style={optionsContainerStyle}>
-        <MessagePin />
+        {chosenChatDetails !== null ? (
+          <>
+            {chatType === "GROUP" ? <GroupParticipants /> : ""}
+            <MessagePin />
+          </>
+        ) : (
+          ""
+        )}
         <Notifications />
         <DropDownMenu />
       </div>
     </MainContainer>
   );
 }
+
+const mapStateToProps = ({ chat }) => {
+  return {
+    ...chat,
+  };
+};
+
+export default connect(mapStateToProps)(AppBar);

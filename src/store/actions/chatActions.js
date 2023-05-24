@@ -9,6 +9,7 @@ export const chatActions = {
   SET_TYPE: "CHAT.SET_TYPE",
   SET_MESSAGES: "CHAT.SET_MESSAGES",
   CLEAR_MESSAGES: "CLEAR_MESSAGES",
+  SET_PARTICIPANTS: "SET_PARTICIPANTS",
 };
 
 export const getActions = (dispatch) => {
@@ -19,6 +20,8 @@ export const getActions = (dispatch) => {
     getInitialChatHistory: (participants) =>
       dispatch(getInitialChatHistory(participants)),
     clearMessagesBeforeNextChat: () => dispatch(clearMessagesBeforeNextChat()),
+    getInitialGroupChatHistory: (groupId) =>
+      dispatch(getInitialGroupChatHistory(groupId)),
   };
 };
 
@@ -31,6 +34,7 @@ export const setChosenChatDetails = (chatDetails, chatType) => {
 };
 
 export const setMessages = (messages) => {
+  // console.log(messages);
   return {
     type: chatActions.SET_MESSAGES,
     messages,
@@ -47,5 +51,13 @@ const getInitialChatHistory = (participants) => {
 const clearMessagesBeforeNextChat = () => {
   return {
     type: chatActions.CLEAR_MESSAGES,
+  };
+};
+
+const getInitialGroupChatHistory = (groupId) => {
+  return async (dispatch) => {
+    const response = await api.getGroupChatHistory(groupId);
+    console.log(response);
+    dispatch(setMessages(response.data.data?.groupChatMessages));
   };
 };

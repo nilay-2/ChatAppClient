@@ -111,3 +111,34 @@ export const getChatHistory = async (participants) => {
     };
   }
 };
+
+export const createGroupChat = async ({ groupName, friendsAdded }) => {
+  const arrayOfFriendsId = friendsAdded.map((frnd) => frnd.friendId._id);
+  try {
+    return await apiClient.post(
+      "/groupChat/createGroup",
+      { groupName, arrayOfFriendsId },
+      {
+        withCredentials: true,
+      }
+    );
+  } catch (error) {
+    return {
+      error: true,
+      exception: error,
+    };
+  }
+};
+
+export const getGroupChatHistory = async (groupId) => {
+  try {
+    return await apiClient.get(`/groupChat/${groupId}/chats`, {
+      withCredentials: true,
+    });
+  } catch (error) {
+    return {
+      error: true,
+      exception: error,
+    };
+  }
+};

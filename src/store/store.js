@@ -12,12 +12,14 @@ import authReducer from "./reducers/authReducer";
 import alertReducer from "./reducers/alertReducer";
 import friendsReducer from "./reducers/friendsReducer";
 import chatReducer from "./reducers/chatReducer";
+import groupChatReducer from "./reducers/groupChatReducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   alert: alertReducer,
   friends: friendsReducer,
   chat: chatReducer,
+  groupChat: groupChatReducer,
 });
 
 const store = configureStore(

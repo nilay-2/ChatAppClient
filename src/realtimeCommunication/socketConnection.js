@@ -7,6 +7,7 @@ import {
 } from "../store/actions/friendsActions";
 import { setMessages } from "../store/actions/chatActions";
 import store from "../store/store";
+import { setGroupList } from "../store/actions/groupChatActions";
 let socket = null;
 
 export const connectWithSocketServer = (userDetails) => {
@@ -40,6 +41,16 @@ export const connectWithSocketServer = (userDetails) => {
     store.dispatch(setOnlineUsers(onlineUsers));
     store.dispatch(checkIfFriendIsOnline());
   });
+
+  socket.on("groupList", ({ groups }) => {
+    // console.log(groups);
+    store.dispatch(setGroupList(groups));
+  });
+
+  socket.on("recieve_group_message", (groupChatMessages) => {
+    console.log(groupChatMessages);
+    store.dispatch(setMessages(groupChatMessages));
+  });
 };
 
 export const directMessageHandler = (data) => {
@@ -49,7 +60,17 @@ export const directMessageHandler = (data) => {
 
 export const getRealTimeChatUpdates = () => {
   socket?.on("realTimeChatUpdate", (data) => {
-    // console.log(data);
-    store.dispatch(setMessages(data));
+    console.log(data);
+    // store.dispatch(setMessages(data));
   });
+};
+
+export const joinGroup = (data) => {
+  console.log(data);
+  socket?.emit("join_group", data);
+};
+
+export const sendGroupMessage = (data) => {
+  // console.log(data);
+  socket?.emit("send_group_message", data);
 };

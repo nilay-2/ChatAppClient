@@ -5,6 +5,7 @@ import { styled } from "@mui/system";
 import Avatar from "../../shared/components/Avatar";
 import "../../css/FriendListItem.css";
 import { validateCreateGroupChatForm } from "../../shared/utils/validateCreateGroupChatForm";
+import { createGroupChat } from "../../api";
 import axios from "axios";
 const ContentWrapper = styled("div")({
   width: "420px",
@@ -71,6 +72,9 @@ const AddParticipantsToGroupDialog = ({
   const [query, setQuery] = useState("");
   const [disabled, setDisabled] = useState(true);
   // initial fetch to get the friends of the current users
+
+  // console.log(friendsAdded);
+
   useEffect(() => {
     const getFriends = async () => {
       const friendsResponse = await axios.get(
@@ -101,7 +105,9 @@ const AddParticipantsToGroupDialog = ({
 
   // function to add friend
   const addFriendHandler = (friend) => {
-    const frnd = friendsAdded.find((val) => val._id === friend._id);
+    const frnd = friendsAdded.find(
+      (val) => val.friendId._id === friend.friendId._id
+    );
     if (!frnd) {
       setFriendsAdded((prev) => [...prev, friend]);
     }
@@ -110,11 +116,12 @@ const AddParticipantsToGroupDialog = ({
   // function to remove friend
   const removeFriend = (friend) => {
     const newArr = friendsAdded.filter((val) => {
-      let newVal = null;
+      // let newVal = null;
       if (val._id !== friend._id) {
-        newVal = val;
+        // newVal = val;
+        return val;
       }
-      return newVal;
+      // return newVal;
     });
     setFriendsAdded(newArr);
   };
@@ -133,6 +140,14 @@ const AddParticipantsToGroupDialog = ({
     else return searchByQuery;
   };
 
+  // send group chat data to the server
+  const submitGroupChatData = async () => {
+    const res = await createGroupChat({ groupName, friendsAdded });
+    console.log(res);
+    setFriendsAdded([]);
+    setQuery("");
+    setGroupName("");
+  };
   return (
     <Dialog open={isDialogOpen} onClose={closeDialogBoxHandler}>
       <DialogTitle sx={{ backgroundColor: "#24272e" }}>
@@ -185,6 +200,7 @@ const AddParticipantsToGroupDialog = ({
                   </FriendListItem>
                   <Button
                     onClick={() => {
+                      // console.log(val);
                       addFriendHandler(val);
                     }}
                     className="add--btn"
@@ -206,6 +222,7 @@ const AddParticipantsToGroupDialog = ({
         <button
           className={`btn btn-${disabled ? "dark" : "primary"} d-block mx-auto`}
           disabled={disabled}
+          onClick={submitGroupChatData}
         >
           Create
         </button>

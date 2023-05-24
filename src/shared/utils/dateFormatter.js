@@ -1,7 +1,7 @@
 export const getDateAndTime = (timeString, option) => {
   const date = new Date(timeString);
   const day = `${date.getDate()}`.padStart(2, 0);
-  const month = `${date.getMonth()}`.padStart(2, 0);
+  const month = `${date.getMonth() + 1}`.padStart(2, 0);
   const year = `${date.getFullYear()}`.padStart(2, 0);
   timeString = date.toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });
   // console.log(timeString)
