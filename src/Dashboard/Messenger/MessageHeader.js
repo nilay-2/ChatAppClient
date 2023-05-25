@@ -2,7 +2,6 @@ import React from "react";
 import { styled } from "@mui/system";
 import Avatar from "../../shared/components/Avatar";
 import { Typography } from "@mui/material";
-
 const MainContainer = styled("div")({
   width: "98%",
   display: "column",

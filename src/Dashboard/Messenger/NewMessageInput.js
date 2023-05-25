@@ -10,7 +10,7 @@ const Input = styled("input")({
   color: "#fff",
   width: "95%",
   display: "block",
-  margin: "15px auto 0px auto",
+  margin: "0px auto 0 auto",
   padding: "10px",
   borderRadius: "15px",
 });

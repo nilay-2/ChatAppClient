@@ -12,6 +12,7 @@ const MainContainer = styled("div")({
   height: "100%",
   display: "flex",
   flexDirection: "column",
+  // justifyContent: "space-around",
 });
 
 function Messenger({ chosenChatDetails, chatType, messages }) {

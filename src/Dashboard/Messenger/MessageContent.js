@@ -9,6 +9,17 @@ import store from "../../store/store";
 const Wrapper = styled("div")({
   // flexGrow: 1,
   justifyContent: "space-between",
+  // border: "2px solid green",
+  boxShadow: "inset 0em 0em 1em #202225",
+});
+const InputWrapper = styled("div")({
+  // border: "2px solid green",
+});
+
+const TypingIndicatorContainer = styled("div")({
+  height: "20px",
+  border: "2px solid green",
+  display: "none",
 });
 
 function MessageContent({
@@ -52,9 +63,12 @@ function MessageContent({
     }
   }, [submit]);
   return (
-    <Wrapper>
+    <Wrapper className="messageContentWrapper">
       <Messages chosenChatDetails={chosenChatDetails} messages={messages} />
-      <NewMessageInput changeSubmitState={changeSubmitState} />
+      <InputWrapper>
+        <TypingIndicatorContainer />
+        <NewMessageInput changeSubmitState={changeSubmitState} />
+      </InputWrapper>
     </Wrapper>
   );
 }

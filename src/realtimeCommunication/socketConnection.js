@@ -61,7 +61,7 @@ export const directMessageHandler = (data) => {
 export const getRealTimeChatUpdates = () => {
   socket?.on("realTimeChatUpdate", (data) => {
     console.log(data);
-    // store.dispatch(setMessages(data));
+    store.dispatch(setMessages(data));
   });
 };
 

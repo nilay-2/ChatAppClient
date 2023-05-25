@@ -6,7 +6,7 @@ import Message from "./Message";
 // import dummyMessages from "./dummyMessages";
 import { getDateAndTime } from "../../shared/utils/dateFormatter";
 const MainContainer = styled("div")({
-  height: "420px",
+  height: "40px",
   overflow: "auto",
   display: "flex",
   flexDirection: "column",
@@ -18,7 +18,7 @@ function Messages({ chosenChatDetails, messages }) {
   // console.log("date for first message: ", messages[0]?.date);
   // console.log("date of previous element", messages[-1]?.date);
   // if (messages[0]?.date === messages[-1]?.date) console.log(true);
-  // else console.log(false);
+  // else console.log(alse);
 
   const bottomRef = useRef(null);
 
