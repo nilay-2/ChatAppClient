@@ -37,6 +37,7 @@ const MessageMenu = () => {
         style={{
           display: "block",
           borderRadius: "10px",
+          padding: "3px",
           backgroundColor: "#313439",
           border: "0.2px solid black",
         }}

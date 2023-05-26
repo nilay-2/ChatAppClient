@@ -4,6 +4,10 @@ const initState = {
   messages: [],
   chosenChatDetails: null,
   chatType: null,
+  typingIndicator: {
+    sender: "",
+    toggleState: null,
+  },
 };
 
 const reducer = (state = initState, action) => {
@@ -24,7 +28,20 @@ const reducer = (state = initState, action) => {
         ...state,
         messages: [],
       };
-
+    case chatActions.TOGGLE_TYPING_INDICATOR:
+      return {
+        ...state,
+        typingIndicator: {
+          ...state.typingIndicator,
+          sender: action.sender,
+          toggleState: action.state,
+        },
+      };
+    case chatActions.APPEND_MESSAGE:
+      return {
+        ...state,
+        messages: [...state.messages, action.message],
+      };
     default:
       return state;
   }

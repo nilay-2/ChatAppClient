@@ -6,7 +6,7 @@ import Message from "./Message";
 // import dummyMessages from "./dummyMessages";
 import { getDateAndTime } from "../../shared/utils/dateFormatter";
 const MainContainer = styled("div")({
-  height: "420px",
+  height: "400px",
   overflow: "auto",
   display: "flex",
   flexDirection: "column",
