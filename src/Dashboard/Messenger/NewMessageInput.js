@@ -1,21 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/system";
 import { connect } from "react-redux";
 import {
   directMessageHandler,
   sendGroupMessage,
+  sendTypingIndicatorEvent,
+  sendStopTypingIndicatorEvent,
 } from "../../realtimeCommunication/socketConnection";
+import store from "../../store/store";
+import { dividerClasses } from "@mui/material";
+import { getActions } from "../../store/actions/chatActions";
+
 const Input = styled("input")({
   backgroundColor: "#202225",
   color: "#fff",
   width: "95%",
   display: "block",
-  margin: "0px auto 0 auto",
+  margin: "0px auto 0px auto",
   padding: "10px",
   borderRadius: "15px",
 });
 
-function NewMessageInput({ chosenChatDetails, changeSubmitState, chatType }) {
+function NewMessageInput({
+  chosenChatDetails,
+  //  changeSubmitState,
+  chatType,
+}) {
   const [message, setMessage] = useState("");
 
   const handleOnChange = (e) => {
@@ -23,7 +33,7 @@ function NewMessageInput({ chosenChatDetails, changeSubmitState, chatType }) {
   };
 
   const handleOnKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && message !== "") {
       if (chatType === "DIRECT") {
         const data = {
           chatType,
@@ -32,7 +42,7 @@ function NewMessageInput({ chosenChatDetails, changeSubmitState, chatType }) {
           date: new Date(),
         };
         directMessageHandler(data);
-        changeSubmitState();
+        // changeSubmitState();
       } else if (chatType === "GROUP") {
         const data = {
           ...chosenChatDetails,
@@ -42,6 +52,10 @@ function NewMessageInput({ chosenChatDetails, changeSubmitState, chatType }) {
         sendGroupMessage(data);
       }
       clearInput();
+    } else {
+      const sender = store.getState().auth.userDetails?.name;
+      const data = { ...chosenChatDetails, chatType, sender };
+      sendTypingIndicatorEvent(data);
     }
   };
 
@@ -50,16 +64,18 @@ function NewMessageInput({ chosenChatDetails, changeSubmitState, chatType }) {
   };
 
   return (
-    <Input
-      placeholder={
-        chatType === "DIRECT"
-          ? `Message @${chosenChatDetails.username}`
-          : `Message @${chosenChatDetails.groupName}`
-      }
-      value={message}
-      onChange={handleOnChange}
-      onKeyDown={handleOnKeyDown}
-    />
+    <>
+      <Input
+        placeholder={
+          chatType === "DIRECT"
+            ? `Message @${chosenChatDetails.username}`
+            : `Message @${chosenChatDetails.groupName}`
+        }
+        value={message}
+        onChange={handleOnChange}
+        onKeyDown={handleOnKeyDown}
+      />
+    </>
   );
 }
 
@@ -69,4 +85,10 @@ const mapStateToProps = ({ chat }) => {
   };
 };
 
-export default connect(mapStateToProps)(NewMessageInput);
+const mapActionsToProps = (dispatch) => {
+  return {
+    ...getActions(dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(NewMessageInput);

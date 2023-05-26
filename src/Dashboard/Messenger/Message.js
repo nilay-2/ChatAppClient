@@ -7,7 +7,7 @@ import MessageMenu from "./MessageMenu";
 import "../../css/messageContainer.css";
 
 const MainContainer = styled("div")({
-  width: "97%",
+  width: "98%",
   display: "flex",
   marginTop: "15px",
   // padding: "0 0 0 10px",
@@ -107,7 +107,9 @@ const Message = ({ id, content, sameAuthor, username, date, sameDay }) => {
           </span>
           {content}
         </SameAuthorMessageText>
-        <span style={{ display: "block", position: "relative" }}>
+        <span
+        // style={{ display: "block", position: "relative" }}
+        >
           {hover ? <MessageMenu /> : ""}
         </span>
       </SameAuthorMessageContent>

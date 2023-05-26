@@ -5,7 +5,11 @@ import {
   setOnlineUsers,
   checkIfFriendIsOnline,
 } from "../store/actions/friendsActions";
-import { setMessages } from "../store/actions/chatActions";
+import {
+  appendMessage,
+  setMessages,
+  toggleTypingIndicator,
+} from "../store/actions/chatActions";
 import store from "../store/store";
 import { setGroupList } from "../store/actions/groupChatActions";
 let socket = null;
@@ -47,9 +51,26 @@ export const connectWithSocketServer = (userDetails) => {
     store.dispatch(setGroupList(groups));
   });
 
+  socket.on("realTimeChatUpdate", (data) => {
+    console.log(data);
+    store.dispatch(appendMessage(data));
+  });
+
   socket.on("recieve_group_message", (groupChatMessages) => {
     console.log(groupChatMessages);
-    store.dispatch(setMessages(groupChatMessages));
+    store.dispatch(appendMessage(groupChatMessages));
+  });
+
+  socket.on("received_typing_indicator_event", (senderDetails) => {
+    // console.log(senderDetails);
+    if (store.getState().chat.typingIndicator.toggleState !== true) {
+      store.dispatch(toggleTypingIndicator(senderDetails, true));
+    }
+    // console.log("hello");
+    setTimeout(() => {
+      store.dispatch(toggleTypingIndicator(senderDetails, false));
+      // console.log("typing stopped");
+    }, 10000);
   });
 };
 
@@ -61,16 +82,25 @@ export const directMessageHandler = (data) => {
 export const getRealTimeChatUpdates = () => {
   socket?.on("realTimeChatUpdate", (data) => {
     console.log(data);
-    store.dispatch(setMessages(data));
+    store.dispatch(appendMessage(data));
+    // store.dispatch(setMessages(data));
   });
 };
 
 export const joinGroup = (data) => {
-  console.log(data);
+  // console.log(data);
   socket?.emit("join_group", data);
 };
 
 export const sendGroupMessage = (data) => {
   // console.log(data);
   socket?.emit("send_group_message", data);
+};
+
+export const sendTypingIndicatorEvent = (data) => {
+  socket?.emit("send_typing_indicator_event", data);
+};
+
+export const sendStopTypingIndicatorEvent = (data) => {
+  socket?.emit("send_stop_typing_indicator_event", data);
 };
