@@ -70,7 +70,7 @@ export const connectWithSocketServer = (userDetails) => {
     setTimeout(() => {
       store.dispatch(toggleTypingIndicator(senderDetails, false));
       // console.log("typing stopped");
-    }, 10000);
+    }, 2000);
   });
 };
 
@@ -81,7 +81,7 @@ export const directMessageHandler = (data) => {
 
 export const getRealTimeChatUpdates = () => {
   socket?.on("realTimeChatUpdate", (data) => {
-    console.log(data);
+    // console.log(data);
     store.dispatch(appendMessage(data));
     // store.dispatch(setMessages(data));
   });

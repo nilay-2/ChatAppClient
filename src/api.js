@@ -142,3 +142,30 @@ export const getGroupChatHistory = async (groupId) => {
     };
   }
 };
+
+export const deleteMessage = async (message) => {
+  try {
+    return await apiClient.delete(`/chat/delete/${message.id}`, {
+      withCredentials: true,
+    });
+  } catch (error) {
+    return {
+      error: true,
+      exception: error,
+    };
+  }
+};
+
+export const deleteGroupMessage = async (data) => {
+  const { groupId, messageId } = data;
+  try {
+    return await apiClient.delete(`/groupChat/${groupId}/delete/${messageId}`, {
+      withCredentials: true,
+    });
+  } catch (error) {
+    return {
+      error: true,
+      exception: error,
+    };
+  }
+};

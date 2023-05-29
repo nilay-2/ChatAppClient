@@ -8,6 +8,8 @@ import { getActions } from "../store/actions/authActions";
 import { connect } from "react-redux";
 import { connectWithSocketServer } from "../realtimeCommunication/socketConnection";
 import io from "socket.io-client";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import AppBar from "./AppBar/AppBar";
 const Wrapper = styled("div")({
   width: "100%",
@@ -35,6 +37,7 @@ function Dashboard({ setUserDetails, verifyUsersBeforeEnteringDashboard }) {
   }, []);
   return (
     <Wrapper>
+      <ToastContainer />
       <SideBar />
       <FriendSideBar />
       <Messenger />

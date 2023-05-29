@@ -17,10 +17,6 @@ const MainContainer = styled("div")({
 });
 
 function FriendsList({ friends, onlineFriends, onlineUsers }) {
-  // useEffect(() => {
-  //   store.dispatch(setOnlineUsers(onlineUsers));
-  //   store.dispatch(checkIfFriendIsOnline());
-  // }, [onlineUsers]);
   return (
     <MainContainer>
       {onlineFriends?.map((f, i) => {
@@ -31,6 +27,12 @@ function FriendsList({ friends, onlineFriends, onlineUsers }) {
             id={f.friendId?._id}
             // key={f.friendId._id}
             key={i}
+            activeStatus={
+              store.getState().chat.chosenChatDetails?.username ===
+              f.friendId?.name
+                ? true
+                : false
+            }
           />
         );
       })}

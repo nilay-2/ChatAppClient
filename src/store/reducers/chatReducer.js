@@ -1,13 +1,17 @@
+import { FastRewindOutlined } from "@mui/icons-material";
 import { chatActions } from "../actions/chatActions";
 
 const initState = {
   messages: [],
   chosenChatDetails: null,
   chatType: null,
+  isLoading: null,
   typingIndicator: {
     sender: "",
     toggleState: null,
   },
+  replyToMessage: null,
+  messageToDelete: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -26,7 +30,7 @@ const reducer = (state = initState, action) => {
     case chatActions.CLEAR_MESSAGES:
       return {
         ...state,
-        messages: [],
+        isLoading: action.loadingStatus,
       };
     case chatActions.TOGGLE_TYPING_INDICATOR:
       return {
@@ -41,6 +45,24 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         messages: [...state.messages, action.message],
+      };
+    case chatActions.SET_REPLY_MESSAGE:
+      return {
+        ...state,
+        replyToMessage: action.message,
+      };
+    case chatActions.SET_DELETE_MESSAGE:
+      return {
+        ...state,
+        messageToDelete: action.message,
+      };
+    case chatActions.DELETE_MESSAGE:
+      const filteredMessages = state.messages.filter((msg) => {
+        if (msg?._id !== state.messageToDelete?.id) return msg;
+      });
+      return {
+        ...state,
+        messages: [...filteredMessages],
       };
     default:
       return state;

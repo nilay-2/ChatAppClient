@@ -34,11 +34,15 @@
   color: #fff;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
 
 .menu ul li:hover {
-  background-color: blue;
-  cursor: pointer;
+  background-color: #2b3945;
+}
+
+.menu ul li:active {
+  background-color: #1f2933;
 }
 
 .avatar-container {

@@ -1,0 +1,15 @@
+.dialog-close-btn {
+  display: flex;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  color: #fff;
+  background-color: #2b3945;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-close-btn:active {
+  background-color: #1f2933;
+}

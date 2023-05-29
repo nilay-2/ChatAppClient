@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import Avatar from "../../../shared/components/Avatar";
@@ -13,6 +13,7 @@ function FriendsListItem({
   id,
   setChosenChatDetails,
   currentUserId = "",
+  activeStatus,
 }) {
   const handleChatDetails = () => {
     setChosenChatDetails({ id, username }, "DIRECT");
@@ -34,6 +35,7 @@ function FriendsListItem({
           textTransform: "none",
           color: "black",
           position: "relative",
+          backgroundColor: `${activeStatus ? "#2b3945" : ""}`,
         }}
       >
         <Avatar username={username} />
@@ -60,4 +62,10 @@ const mapActionToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapActionToProps)(FriendsListItem);
+const mapStateToProps = ({ chat }) => {
+  return {
+    ...chat,
+  };
+};
+
+export default connect(mapStateToProps, mapActionToProps)(FriendsListItem);
