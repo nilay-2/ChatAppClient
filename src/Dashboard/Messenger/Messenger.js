@@ -6,6 +6,7 @@ import { getActions } from "../../store/actions/chatActions";
 import { connect } from "react-redux";
 import MessageHeader from "./MessageHeader";
 import MessageContent from "./MessageContent";
+
 const MainContainer = styled("div")({
   flexGrow: 1,
   backgroundColor: "#36393f",
@@ -15,9 +16,10 @@ const MainContainer = styled("div")({
   // justifyContent: "space-around",
 });
 
-function Messenger({ chosenChatDetails, chatType, messages }) {
+function Messenger({ chosenChatDetails, chatType }) {
   return (
     <MainContainer>
+      <div></div>
       <AppBar />
 
       {chosenChatDetails ? (

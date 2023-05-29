@@ -13,7 +13,7 @@ const MainContainer = styled("div")({
 export default function MessageHeader({ name }) {
   return (
     <MainContainer>
-      <Avatar large username={name} />
+      <Avatar username={name} customHeight={"80px"} customWidth={"80px"} />
       <Typography
         variant="h4"
         sx={{

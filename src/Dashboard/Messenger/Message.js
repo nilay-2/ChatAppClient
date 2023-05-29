@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { styled } from "@mui/system";
 import { Typography } from "@mui/material";
 import Avatar from "../../shared/components/Avatar";
@@ -10,24 +10,18 @@ const MainContainer = styled("div")({
   width: "98%",
   display: "flex",
   marginTop: "15px",
-  // padding: "0 0 0 10px",
-  // border: "2px solid blue",
+  flexDirection: "column",
 });
 
 const AvatarContainer = styled("div")({
   width: "70px",
-  // border: "2px solid black",
 });
 
 const MessageContainer = styled("div")({
-  // padding: "4px 0 4px 4px",
   marginLeft: "5px",
   width: "100%",
   color: "#DEDEDE",
   display: "flex",
-  // flexDirection: "column",
-  // justifyContent: "space-between",
-  // border: "2px solid green",
 });
 
 const MessageWrapper = styled("div")({
@@ -40,7 +34,7 @@ const MessageWrapper = styled("div")({
 
 const SameAuthorMessageContent = styled("div")({
   color: "#dcddde",
-  width: "97%",
+  width: "98%",
   padding: "4px 0",
   display: "flex",
   justifyContent: "space-between",
@@ -49,8 +43,6 @@ const SameAuthorMessageContent = styled("div")({
 const SameAuthorMessageText = styled("div")({
   display: "flex",
   alignItems: "center",
-  // paddingLeft: "52px",
-  // border: "1px solid black",
 });
 
 const DateBreaker = styled("div")({
@@ -74,9 +66,52 @@ const BigContainer = styled("div")({
   margin: "10px 0",
 });
 
-const Message = ({ id, content, sameAuthor, username, date, sameDay }) => {
+const Message = ({
+  id,
+  content,
+  sameAuthor,
+  username,
+  date,
+  userId,
+  sameDay,
+  replyToMessage,
+  changeMessageColor,
+  messageReplyDetails,
+  setHighlightElement,
+  scrolledTo,
+}) => {
   const [hover, setHover] = useState(false);
 
+  // highligth scrolled element logic
+  const highlightElement = (messageReplyDetails) => {
+    setHighlightElement(messageReplyDetails);
+    setTimeout(() => {
+      setHighlightElement(null);
+    }, 2000);
+  };
+  // scroll logic
+
+  const messageRef = useRef(null);
+
+  useEffect(() => {
+    const handleSpanClick = (event) => {
+      const messageId = event.target.getAttribute("data-message-id");
+      const messageElement = document.getElementById(messageId);
+      // console.log(messageElement, messageId);
+      messageElement?.scrollIntoView({
+        behavior: "smooth",
+        // block: "start",
+      });
+    };
+
+    messageRef.current?.addEventListener("click", handleSpanClick);
+
+    return () => {
+      messageRef.current?.removeEventListener("click", handleSpanClick);
+    };
+  }, []);
+
+  //
   const setOnMouseEnter = () => {
     setHover(true);
   };
@@ -85,12 +120,23 @@ const Message = ({ id, content, sameAuthor, username, date, sameDay }) => {
     setHover(false);
   };
 
-  if (sameAuthor && sameDay) {
+  if (sameAuthor && sameDay && messageReplyDetails === undefined) {
     return (
       <SameAuthorMessageContent
+        id={id}
+        ref={messageRef}
         className="messageContainerHover"
         onMouseEnter={setOnMouseEnter}
         onMouseLeave={setOnMouseLeave}
+        sx={
+          changeMessageColor
+            ? {
+                backgroundColor: "#313439",
+              }
+            : scrolledTo
+            ? { backgroundColor: "#1f2933" }
+            : { backgroundColor: "" }
+        }
       >
         <SameAuthorMessageText>
           <span
@@ -98,8 +144,6 @@ const Message = ({ id, content, sameAuthor, username, date, sameDay }) => {
               color: "#b9bbbe",
               fontSize: "12px",
               display: "block",
-              // paddingRight: "14px",
-              // paddingLeft: "10px",
               width: "67px",
             }}
           >
@@ -107,63 +151,176 @@ const Message = ({ id, content, sameAuthor, username, date, sameDay }) => {
           </span>
           {content}
         </SameAuthorMessageText>
-        <span
-        // style={{ display: "block", position: "relative" }}
-        >
-          {hover ? <MessageMenu /> : ""}
+        <span>
+          {hover ? (
+            <MessageMenu
+              messageDetails={{ id, content, username, date }}
+              userId={userId}
+            />
+          ) : (
+            ""
+          )}
         </span>
       </SameAuthorMessageContent>
     );
   }
   return (
-    <BigContainer>
-      {!sameDay ? (
-        <DateBreakContainer>
-          <DateBreaker />
-          <span
-            style={{
-              color: "white",
-              fontSize: "14px",
-            }}
-          >
-            {getDateAndTime(date, "date")}
-          </span>
-          <DateBreaker />
-        </DateBreakContainer>
-      ) : (
-        ""
-      )}
-      <MainContainer
-        className="messageWrapper messageContainerHover"
-        id={id}
-        onMouseEnter={setOnMouseEnter}
-        onMouseLeave={setOnMouseLeave}
-      >
-        {/*<AvatarContainer className="avatarContainer">*/}
-        <div className="avatar-container">
-          <Avatar username={username} />
-        </div>
-        {/*</AvatarContainer>*/}
-        <MessageWrapper>
-          <Typography
-            style={{ fontSize: "16px", color: "white", marginLeft: "5px" }}
-          >
-            {username}
+    <>
+      <BigContainer>
+        {!sameDay ? (
+          <DateBreakContainer>
+            <DateBreaker />
             <span
               style={{
-                fontSize: "12px",
-                color: "#b9bbbe",
-                marginLeft: "10px",
+                color: "white",
+                fontSize: "14px",
               }}
-            >{` ${getDateAndTime(date, "dateAndTime")}`}</span>
-          </Typography>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <MessageContainer>{content}</MessageContainer>
+            >
+              {getDateAndTime(date, "date")}
+            </span>
+            <DateBreaker />
+          </DateBreakContainer>
+        ) : (
+          ""
+        )}
+      </BigContainer>
+      {messageReplyDetails === undefined ? (
+        <MainContainer
+          ref={messageRef}
+          className="messageWrapper messageContainerHover"
+          id={id}
+          onMouseEnter={setOnMouseEnter}
+          onMouseLeave={setOnMouseLeave}
+          sx={
+            changeMessageColor
+              ? {
+                  backgroundColor: "#313439",
+                }
+              : scrolledTo
+              ? { backgroundColor: "#1f2933" }
+              : { backgroundColor: "" }
+          }
+        >
+          <div className="message-container" style={{ display: "flex" }}>
+            <div className="avatar-container">
+              <Avatar username={username} />
+            </div>
+            <MessageWrapper>
+              <Typography
+                style={{ fontSize: "16px", color: "white", marginLeft: "5px" }}
+              >
+                {username}
+                <span
+                  style={{
+                    fontSize: "12px",
+                    color: "#b9bbbe",
+                    marginLeft: "10px",
+                  }}
+                >{` ${getDateAndTime(date, "dateAndTime")}`}</span>
+              </Typography>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <MessageContainer>{content}</MessageContainer>
+              </div>
+            </MessageWrapper>
+            {hover ? (
+              <MessageMenu
+                messageDetails={{ id, content, username, date, userId }}
+                userId={userId}
+              />
+            ) : (
+              ""
+            )}
           </div>
-        </MessageWrapper>
-        {hover ? <MessageMenu /> : ""}
-      </MainContainer>
-    </BigContainer>
+        </MainContainer>
+      ) : (
+        <MainContainer
+          ref={messageRef}
+          className="messageWrapper messageContainerHover"
+          id={id}
+          onMouseEnter={setOnMouseEnter}
+          onMouseLeave={setOnMouseLeave}
+          sx={
+            changeMessageColor
+              ? {
+                  backgroundColor: "#313439",
+                }
+              : scrolledTo
+              ? { backgroundColor: "#1f2933" }
+              : { backgroundColor: "" }
+          }
+        >
+          <div
+            className="parent-message"
+            style={{
+              height: "30px",
+              width: "55%",
+              paddingLeft: "65px",
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Avatar
+              username={messageReplyDetails.username}
+              customHeight="20px"
+              customWidth="20px"
+              fontSize="12px"
+            />
+            <span
+              style={{
+                scrollBehavior: "smooth",
+                color: "white",
+                margin: "0 5px",
+              }}
+            >
+              {messageReplyDetails.username}
+            </span>
+
+            <span
+              className="messageReplyLink"
+              data-message-id={messageReplyDetails?.messageId}
+              onClick={() => {
+                highlightElement(messageReplyDetails);
+              }}
+            >
+              {messageReplyDetails.content?.length < 56
+                ? messageReplyDetails.content
+                : messageReplyDetails.content?.slice(0, 55) + "..."}
+            </span>
+          </div>
+          <div className="message-container" style={{ display: "flex" }}>
+            <div className="avatar-container">
+              <Avatar username={username} />
+            </div>
+            <MessageWrapper>
+              <Typography
+                style={{ fontSize: "16px", color: "white", marginLeft: "5px" }}
+              >
+                {username}
+                <span
+                  style={{
+                    fontSize: "12px",
+                    color: "#b9bbbe",
+                    marginLeft: "10px",
+                  }}
+                >{` ${getDateAndTime(date, "dateAndTime")}`}</span>
+              </Typography>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <MessageContainer>{content}</MessageContainer>
+              </div>
+            </MessageWrapper>
+            {hover ? (
+              <MessageMenu
+                messageDetails={{ id, content, username, date, userId }}
+                userId={userId}
+              />
+            ) : (
+              ""
+            )}
+          </div>
+        </MainContainer>
+      )}
+    </>
   );
 };
 

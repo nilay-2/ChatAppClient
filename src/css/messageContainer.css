@@ -1,5 +1,20 @@
 .messageContainerHover:hover {
   background-color: #313439;
   color: "#fff";
-  /* border-radius: 10px; */
+}
+
+.messageReplyLink {
+  color: #77797b;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.messageReplyLink:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.highlighted {
+  border: 2px solid red;
+  color: red;
 }

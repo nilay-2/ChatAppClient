@@ -15,9 +15,21 @@ const AvatarPreview = styled("div")({
   borderRadius: "50%",
 });
 
-export default function Avatar({ username, large }) {
+export default function Avatar({
+  username,
+  large,
+  customHeight,
+  customWidth,
+  fontSize,
+}) {
   return (
-    <AvatarPreview style={large ? { height: "80px", width: "80px" } : {}}>
+    <AvatarPreview
+      style={{
+        height: `${customHeight}`,
+        width: `${customWidth}`,
+        fontSize: `${fontSize ? fontSize : null}`,
+      }}
+    >
       {username !== undefined && username !== null
         ? username.substring(0, 2)
         : ""}

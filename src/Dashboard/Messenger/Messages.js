@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import { connect } from "react-redux";
 // import MessageHeader from "./MessageHeader";
@@ -13,7 +13,7 @@ const MainContainer = styled("div")({
   alignItems: "center",
 });
 
-function Messages({ chosenChatDetails, messages }) {
+function Messages({ chosenChatDetails, messages, replyToMessage }) {
   // scroll to the bottom when the height of the box overflows to display the last message
   // console.log("date for first message: ", messages[0]?.date);
   // console.log("date of previous element", messages[-1]?.date);
@@ -22,12 +22,19 @@ function Messages({ chosenChatDetails, messages }) {
 
   const bottomRef = useRef(null);
 
+  const [highlightElement, setHighlightElement] = useState(null);
+
+  // console.log(highlightElement);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behaviour: "smooth" });
   }, [messages]);
 
   return (
-    <MainContainer>
+    <MainContainer
+    //  style={{ scrollBehavior: "smooth" }}
+    >
+      {/*always give smooth-scroll property to the element which has a scroll bar */}
       {/*<MessageHeader name={chosenChatDetails?.username} />*/}
       {messages.map((msg, i) => {
         // console.log(msg.date);
@@ -47,13 +54,19 @@ function Messages({ chosenChatDetails, messages }) {
         // console.log(sameDay);
         return (
           <Message
-            key={i}
+            key={msg?._id}
             id={msg?._id}
+            userId={msg.author?._id}
             username={msg.author?.name}
             content={msg?.content}
             sameAuthor={sameAuthor}
             date={msg?.date}
             sameDay={sameDay}
+            replyToMessage={replyToMessage}
+            changeMessageColor={replyToMessage?.id === msg?._id ? true : false}
+            messageReplyDetails={msg?.messageReplyDetails}
+            setHighlightElement={setHighlightElement}
+            scrolledTo={highlightElement?.messageId === msg?._id ? true : false}
           />
         );
       })}
