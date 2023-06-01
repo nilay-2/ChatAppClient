@@ -14,9 +14,12 @@ import store from "../store/store";
 import { setGroupList } from "../store/actions/groupChatActions";
 let socket = null;
 
+// const backendurl = 'http://localhost:5000/'
+const backendurl = "https://chatvibeserver.vercel.app/";
+
 export const connectWithSocketServer = (userDetails) => {
   const jwtToken = userDetails.token;
-  socket = io("http://localhost:5000/", {
+  socket = io(backendurl, {
     auth: {
       token: jwtToken,
     },
