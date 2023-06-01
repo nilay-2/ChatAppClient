@@ -58,7 +58,11 @@ const reducer = (state = initState, action) => {
       };
     case chatActions.DELETE_MESSAGE:
       const filteredMessages = state.messages.filter((msg) => {
-        if (msg?._id !== state.messageToDelete?.id) return msg;
+        let message;
+        if (msg?._id !== state.messageToDelete?.id) {
+          message = msg;
+        }
+        return message;
       });
       return {
         ...state,

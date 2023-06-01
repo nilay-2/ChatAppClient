@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { styled } from "@mui/system";
 import { connect } from "react-redux";
 import {
@@ -11,12 +11,20 @@ import store from "../../store/store";
 import { dividerClasses } from "@mui/material";
 import { getActions, setReplyToMessage } from "../../store/actions/chatActions";
 import "../../css/replyMessageDialog.css";
+import { IconButton } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { ref, uploadBytes, getDownloadURL, getBlob } from "firebase/storage";
+import { v4 } from "uuid";
+import { storage } from "../../firebase";
+import fileDownload from "js-file-download";
+import b64toBlob from "b64-to-blob";
+import axios from "axios";
 const Input = styled("input")({
   backgroundColor: "#202225",
   color: "#fff",
   width: "95%",
   display: "block",
-  margin: "0px auto 0px auto",
+  // margin: "0px auto 0px auto",
   padding: "10px",
   borderBottomLeftRadius: "15px",
   borderBottomRightRadius: "15px",
@@ -30,59 +38,153 @@ function NewMessageInput({
 }) {
   const [message, setMessage] = useState("");
 
+  const [file, setFile] = useState(null);
+
+  const [openFileUploadDialog, setOpenFileUploadDialog] = useState(false);
+
+  const [bufferData, setBufferData] = useState(null);
+
+  // input ref
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (file || replyToMessage) inputRef.current.focus();
+  }, [file, replyToMessage]);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    // let b64;
+    // let mime;
+    // let fileData;
+    // const reader = new FileReader();
+    // reader.readAsDataURL(e.tar);
+    // reader.onload = function () {
+    //   var mimeType = reader.result.match(
+    //     /^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,/
+    //   )[1];
+    //   var base64Data = reader.result.split(",");
+    //   b64 = base64Data[1];
+    //   mime = mimeType;
+    //   console.log("only the b64", b64);
+    //   console.log("only the mime", mime);
+    //   const blob = b64toBlob(b64, mime); // runs asynchronously
+    //   console.log(blob);
+    //   setBufferData(blob);
+    //   // fileDownload(blob, `${file.name}`);
+    // };
+    // reader.onerror = function (error) {
+    //   console.log("Error: ", error);
+    // };
+  };
+
+  const uploadFileToChat = async () => {
+    if (file === null) return;
+    const fileRef = ref(storage, `ChatMedia/${file.name + v4()}`);
+    // uploadBytes(fileRef, file).then(() => {
+    //   console.log("file uploaded");
+    //   console.log(getDownloadURL(fileRef));
+    // });
+    await uploadBytes(fileRef, file);
+    const url = await getDownloadURL(fileRef);
+    console.log(url);
+    const proxyUrl = "http://localhost:5000/proxy";
+
+    const modifiedUrl = url.replace(
+      /^https:\/\/firebasestorage\.googleapis\.com/,
+      ""
+    );
+    console.log(modifiedUrl);
+    // const xhr = new XMLHttpRequest(); // using xhr
+    // xhr.responseType = "blob";
+    // xhr.onload = (event) => {
+    //   const blob = xhr.response;
+    //   console.log(blob);
+    //   fileDownload(blob, file.name);
+    // };
+
+    // xhr.open("GET", `${proxyUrl}${modifiedUrl}`);
+    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    // xhr.send();
+
+    axios // using axios
+      .get(`${proxyUrl}${modifiedUrl}`, { responseType: "blob" })
+      .then((response) => {
+        const blob = response.data;
+        console.log(blob);
+        fileDownload(blob, file.name); // fileDownload() is npm package
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const fileUploadDialogHandler = () => [
+    setOpenFileUploadDialog(!openFileUploadDialog),
+  ];
+
   const handleOnChange = (e) => {
     setMessage(e.target.value);
   };
 
+  console.log(bufferData);
+
   const handleOnKeyDown = (e) => {
     if (e.key === "Enter" && message !== "") {
-      if (chatType === "DIRECT" && replyToMessage === null) {
-        const data = {
-          chatType,
-          content: message,
-          receiverId: chosenChatDetails.id,
-          date: new Date(),
-        };
-        directMessageHandler(data);
-      } else if (chatType === "GROUP" && replyToMessage === null) {
-        const data = {
-          ...chosenChatDetails,
-          date: new Date(),
-          content: message,
-        };
-        sendGroupMessage(data);
-      } else if (chatType === "DIRECT" && replyToMessage !== null) {
-        const data = {
-          chatType,
-          content: message,
-          receiverId: chosenChatDetails.id,
-          date: new Date(),
-          messageReplyDetails: {
-            messageId: replyToMessage?.id,
-            content: replyToMessage?.content,
-            username: replyToMessage?.username,
-          },
-        };
-        // console.log(data);
-        directMessageHandler(data);
-        setreplyToMessage(null);
-      } else if (chatType === "GROUP" && replyToMessage !== null) {
-        const data = {
-          ...chosenChatDetails,
-          date: new Date(),
-          content: message,
-          messageReplyDetails: {
-            messageId: replyToMessage?.id,
-            content: replyToMessage?.content,
-            username: replyToMessage?.username,
-          },
-        };
-        sendGroupMessage(data);
-        setreplyToMessage(null);
+      if (chatType === "DIRECT") {
+        if (replyToMessage === null) {
+          const data = {
+            chatType,
+            content: message,
+            receiverId: chosenChatDetails.id,
+            date: new Date(),
+          };
+          directMessageHandler(data);
+        } else if (replyToMessage !== null) {
+          const data = {
+            chatType,
+            content: message,
+            receiverId: chosenChatDetails.id,
+            date: new Date(),
+            messageReplyDetails: {
+              messageId: replyToMessage?.id,
+              content: replyToMessage?.content,
+              username: replyToMessage?.username,
+            },
+          };
+          directMessageHandler(data);
+          setreplyToMessage(null);
+        }
+      }
+      if (chatType === "GROUP") {
+        if (replyToMessage === null) {
+          const data = {
+            ...chosenChatDetails,
+            date: new Date(),
+            content: message,
+          };
+          sendGroupMessage(data);
+        } else if (replyToMessage !== null) {
+          const data = {
+            ...chosenChatDetails,
+            date: new Date(),
+            content: message,
+            messageReplyDetails: {
+              messageId: replyToMessage?.id,
+              content: replyToMessage?.content,
+              username: replyToMessage?.username,
+            },
+          };
+          sendGroupMessage(data);
+          setreplyToMessage(null);
+        }
       }
       clearInput();
       return;
+    } else if (e.key === "Enter") {
+      uploadFileToChat();
+      setOpenFileUploadDialog(false);
+      // console.log(bufferData);
     } else {
+      // logic for typing indicator
       const sender = store.getState().auth.userDetails?.name;
       const data = { ...chosenChatDetails, chatType, sender };
       sendTypingIndicatorEvent(data);
@@ -104,7 +206,7 @@ function NewMessageInput({
           style={{
             height: "24px",
             width: "95%",
-            margin: "auto",
+            marginLeft: "50px",
             backgroundColor: "black",
             borderTopLeftRadius: "5px",
             borderTopRightRadius: "5px",
@@ -129,20 +231,41 @@ function NewMessageInput({
       ) : (
         ""
       )}
-      <Input
-        placeholder={
-          chatType === "DIRECT"
-            ? `Message @${chosenChatDetails.username}`
-            : `Message @${chosenChatDetails.groupName}`
-        }
-        value={message}
-        onChange={handleOnChange}
-        onKeyDown={handleOnKeyDown}
-        sx={{
-          borderTopRightRadius: `${replyToMessage !== null ? "0px" : "15px"}`,
-          borderTopLeftRadius: `${replyToMessage !== null ? "0px" : "15px"}`,
-        }}
-      />
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div className="file-uploader-container">
+          {openFileUploadDialog ? (
+            <div className="file-uploader">
+              <input type="file" id="file" onChange={handleFileChange} />
+              <label htmlFor="file" id="file-label">
+                <i className="bi bi-file-earmark-arrow-up-fill file-input-icon"></i>
+                <span className="file-input-content">Upload a File</span>
+              </label>
+            </div>
+          ) : (
+            ""
+          )}
+          <IconButton onClick={fileUploadDialogHandler}>
+            <AddCircleIcon
+              sx={{ color: "white", height: "35px", width: "35px" }}
+            />
+          </IconButton>
+        </div>
+        <Input
+          ref={inputRef}
+          placeholder={
+            chatType === "DIRECT"
+              ? `Message @${chosenChatDetails.username}`
+              : `Message @${chosenChatDetails.groupName}`
+          }
+          value={message}
+          onChange={handleOnChange}
+          onKeyDown={handleOnKeyDown}
+          sx={{
+            borderTopRightRadius: `${replyToMessage !== null ? "0px" : "15px"}`,
+            borderTopLeftRadius: `${replyToMessage !== null ? "0px" : "15px"}`,
+          }}
+        />
+      </div>
     </div>
   );
 }

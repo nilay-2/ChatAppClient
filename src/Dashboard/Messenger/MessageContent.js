@@ -50,7 +50,7 @@ function MessageContent({
       {isLoading ? (
         <div style={{ overflowY: "auto" }}>
           {[1, 2, 3, 4].map((val) => (
-            <ChatLoading />
+            <ChatLoading key={val} />
           ))}
         </div>
       ) : (
