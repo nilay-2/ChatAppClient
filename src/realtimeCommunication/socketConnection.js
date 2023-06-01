@@ -20,6 +20,7 @@ const backendurl = "https://chatvibeserver.vercel.app/";
 export const connectWithSocketServer = (userDetails) => {
   const jwtToken = userDetails.token;
   socket = io(backendurl, {
+    withCredentials: true,
     auth: {
       token: jwtToken,
     },
