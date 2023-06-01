@@ -86,7 +86,8 @@ function NewMessageInput({
     await uploadBytes(fileRef, file);
     const url = await getDownloadURL(fileRef);
     console.log(url);
-    const proxyUrl = "http://localhost:5000/proxy";
+    // const proxyUrl = "http://localhost:5000/proxy";
+    const proxyUrl = "https://chatvibeserver.vercel.app/proxy";
 
     const modifiedUrl = url.replace(
       /^https:\/\/firebasestorage\.googleapis\.com/,
