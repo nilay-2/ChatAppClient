@@ -78,7 +78,7 @@ const AddParticipantsToGroupDialog = ({
   useEffect(() => {
     const getFriends = async () => {
       const friendsResponse = await axios.get(
-        "https://chatappserver-production-6106.up.railway.app/api/friends/",
+        "https://chatsphereclient.netlify.app/api/friends/",
         {
           withCredentials: true,
         }
