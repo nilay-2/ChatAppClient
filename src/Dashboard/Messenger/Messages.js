@@ -36,7 +36,7 @@ function Messages({ chosenChatDetails, messages, replyToMessage }) {
     >
       {/*always give smooth-scroll property to the element which has a scroll bar */}
       {/*<MessageHeader name={chosenChatDetails?.username} />*/}
-      {messages.length > 0
+      {messages !== undefined
         ? messages?.map((msg, i) => {
             // console.log(msg.date);
             const sameAuthor =
