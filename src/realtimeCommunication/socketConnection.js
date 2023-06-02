@@ -12,11 +12,12 @@ import {
 } from "../store/actions/chatActions";
 import store from "../store/store";
 import { setGroupList } from "../store/actions/groupChatActions";
+import { backEndUrl } from "../shared/utils/url";
 let socket = null;
 
 export const connectWithSocketServer = (userDetails) => {
   const jwtToken = userDetails.token;
-  socket = io("https://chatsphereserver.up.railway.app", {
+  socket = io(backEndUrl, {
     withCredentials: true,
     auth: {
       token: jwtToken,

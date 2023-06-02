@@ -7,6 +7,7 @@ import "../../css/FriendListItem.css";
 import { validateCreateGroupChatForm } from "../../shared/utils/validateCreateGroupChatForm";
 import { createGroupChat } from "../../api";
 import axios from "axios";
+import { backEndUrl } from "../../shared/utils/url";
 const ContentWrapper = styled("div")({
   width: "420px",
   height: "auto",
@@ -77,12 +78,9 @@ const AddParticipantsToGroupDialog = ({
 
   useEffect(() => {
     const getFriends = async () => {
-      const friendsResponse = await axios.get(
-        "https://chatsphereserver.up.railway.app/api/friends/",
-        {
-          withCredentials: true,
-        }
-      );
+      const friendsResponse = await axios.get(`${backEndUrl}/api/friends/`, {
+        withCredentials: true,
+      });
       setFriends((prev) => [...prev, ...friendsResponse.data?.friends]);
     };
     getFriends();

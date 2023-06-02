@@ -1,7 +1,7 @@
 import axios from "axios";
-
+import { backEndUrl } from "./shared/utils/url";
 const apiClient = axios.create({
-  baseURL: "https://chatsphereserver.up.railway.app/api",
+  baseURL: `${backEndUrl}/api`,
   timeout: 5000,
   headers: {
     "Access-Control-Allow-Origin": "*",

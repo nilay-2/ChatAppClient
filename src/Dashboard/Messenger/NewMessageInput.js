@@ -251,16 +251,6 @@ function NewMessageInput({
             />
           </IconButton>
         </div>
-        <a
-          href={url}
-          download={file?.name}
-          style={{
-            border: "2px solid red",
-            display: "block",
-            height: "100px",
-            width: "100px",
-          }}
-        ></a>
         <Input
           ref={inputRef}
           placeholder={
