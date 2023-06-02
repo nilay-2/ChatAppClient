@@ -89,24 +89,24 @@ function NewMessageInput({
     console.log(url);
     setUrl(url);
     // const proxyUrl = "http://localhost:5000/proxy";
-    // // const proxyUrl = "https://chatvibeserver.vercel.app/proxy";
+    const proxyUrl = "https://chatsphereserver.up.railway.app";
 
-    // const modifiedUrl = url.replace(
-    //   /^https:\/\/firebasestorage\.googleapis\.com/,
-    //   ""
-    // );
+    const modifiedUrl = url.replace(
+      /^https:\/\/firebasestorage\.googleapis\.com/,
+      ""
+    );
     // console.log(modifiedUrl);
-    // const xhr = new XMLHttpRequest(); // using xhr
-    // xhr.responseType = "blob";
-    // xhr.onload = (event) => {
-    //   const blob = xhr.response;
-    //   console.log(blob);
-    //   fileDownload(blob, file.name);
-    // };
+    const xhr = new XMLHttpRequest(); // using xhr
+    xhr.responseType = "blob";
+    xhr.onload = (event) => {
+      const blob = xhr.response;
+      console.log(blob);
+      fileDownload(blob, file.name);
+    };
 
-    // xhr.open("GET", `${proxyUrl}${modifiedUrl}`);
-    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-    // xhr.send();
+    xhr.open("GET", `${proxyUrl}${modifiedUrl}`);
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    xhr.send();
 
     // axios // using axios
     //   .get(`${proxyUrl}${modifiedUrl}`, { responseType: "blob" })
