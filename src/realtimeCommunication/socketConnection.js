@@ -16,8 +16,8 @@ let socket = null;
 
 export const connectWithSocketServer = (userDetails) => {
   const jwtToken = userDetails.token;
-  socket = io("http://localhost:5000", {
-    // withCredentials: true,
+  socket = io("https://chatappserver-production-6106.up.railway.app", {
+    withCredentials: true,
     auth: {
       token: jwtToken,
     },
