@@ -36,40 +36,46 @@ function Messages({ chosenChatDetails, messages, replyToMessage }) {
     >
       {/*always give smooth-scroll property to the element which has a scroll bar */}
       {/*<MessageHeader name={chosenChatDetails?.username} />*/}
-      {messages?.map((msg, i) => {
-        // console.log(msg.date);
-        const sameAuthor =
-          i > 0 &&
-          messages[i].author?._id.toString() ===
-            messages[i - 1].author?._id.toString()
-            ? true
-            : false;
-        // console.log(sameAuthor);
-        const sameDay =
-          i > 0 &&
-          getDateAndTime(messages[i]?.date, "date") ===
-            getDateAndTime(messages[i - 1]?.date, "date")
-            ? true
-            : false;
-        // console.log(sameDay);
-        return (
-          <Message
-            key={msg?._id}
-            id={msg?._id}
-            userId={msg.author?._id}
-            username={msg.author?.name}
-            content={msg?.content}
-            sameAuthor={sameAuthor}
-            date={msg?.date}
-            sameDay={sameDay}
-            replyToMessage={replyToMessage}
-            changeMessageColor={replyToMessage?.id === msg?._id ? true : false}
-            messageReplyDetails={msg?.messageReplyDetails}
-            setHighlightElement={setHighlightElement}
-            scrolledTo={highlightElement?.messageId === msg?._id ? true : false}
-          />
-        );
-      })}
+      {messages.length > 0
+        ? messages?.map((msg, i) => {
+            // console.log(msg.date);
+            const sameAuthor =
+              i > 0 &&
+              messages[i].author?._id.toString() ===
+                messages[i - 1].author?._id.toString()
+                ? true
+                : false;
+            // console.log(sameAuthor);
+            const sameDay =
+              i > 0 &&
+              getDateAndTime(messages[i]?.date, "date") ===
+                getDateAndTime(messages[i - 1]?.date, "date")
+                ? true
+                : false;
+            // console.log(sameDay);
+            return (
+              <Message
+                key={msg?._id}
+                id={msg?._id}
+                userId={msg.author?._id}
+                username={msg.author?.name}
+                content={msg?.content}
+                sameAuthor={sameAuthor}
+                date={msg?.date}
+                sameDay={sameDay}
+                replyToMessage={replyToMessage}
+                changeMessageColor={
+                  replyToMessage?.id === msg?._id ? true : false
+                }
+                messageReplyDetails={msg?.messageReplyDetails}
+                setHighlightElement={setHighlightElement}
+                scrolledTo={
+                  highlightElement?.messageId === msg?._id ? true : false
+                }
+              />
+            );
+          })
+        : ""}
       <div id={"scrollableDiv"} ref={bottomRef}></div>
     </MainContainer>
   );
