@@ -2,6 +2,7 @@ import {
   configureStore,
   combineReducers,
   applyMiddleware,
+  getDefaultMiddleware,
 } from "@reduxjs/toolkit";
 
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -23,7 +24,14 @@ const rootReducer = combineReducers({
 });
 
 const store = configureStore(
-  { reducer: rootReducer },
+  {
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        immutableCheck: false,
+        serializableCheck: false,
+      }),
+  },
   composeWithDevTools(applyMiddleware(thunk))
 );
 

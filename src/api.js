@@ -1,12 +1,11 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  // baseURL: "http://localhost:5000/api",
-  baseURL: "https://chatvibeserver.vercel.app/api",
-  timeout: 10000,
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-  },
+  baseURL: "http://localhost:5000/api",
+  timeout: 5000,
+  // headers: {
+  //   "Access-Control-Allow-Origin": "*",
+  // },
 });
 
 export const login = async (data) => {

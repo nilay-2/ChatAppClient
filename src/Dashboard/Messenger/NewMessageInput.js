@@ -5,26 +5,24 @@ import {
   directMessageHandler,
   sendGroupMessage,
   sendTypingIndicatorEvent,
-  sendStopTypingIndicatorEvent,
+  // sendStopTypingIndicatorEvent,
 } from "../../realtimeCommunication/socketConnection";
 import store from "../../store/store";
-import { dividerClasses } from "@mui/material";
+// import { dividerClasses } from "@mui/material";
 import { getActions, setReplyToMessage } from "../../store/actions/chatActions";
 import "../../css/replyMessageDialog.css";
 import { IconButton } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { ref, uploadBytes, getDownloadURL, getBlob } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../../firebase";
 import fileDownload from "js-file-download";
 import b64toBlob from "b64-to-blob";
-import axios from "axios";
 const Input = styled("input")({
   backgroundColor: "#202225",
   color: "#fff",
   width: "95%",
   display: "block",
-  // margin: "0px auto 0px auto",
   padding: "10px",
   borderBottomLeftRadius: "15px",
   borderBottomRightRadius: "15px",
@@ -44,6 +42,9 @@ function NewMessageInput({
 
   const [bufferData, setBufferData] = useState(null);
 
+  const [url, setUrl] = useState(null);
+
+  console.log(file);
   // input ref
   const inputRef = useRef(null);
   useEffect(() => {
@@ -86,14 +87,15 @@ function NewMessageInput({
     await uploadBytes(fileRef, file);
     const url = await getDownloadURL(fileRef);
     console.log(url);
+    setUrl(url);
     // const proxyUrl = "http://localhost:5000/proxy";
-    const proxyUrl = "https://chatvibeserver.vercel.app/proxy";
+    // // const proxyUrl = "https://chatvibeserver.vercel.app/proxy";
 
-    const modifiedUrl = url.replace(
-      /^https:\/\/firebasestorage\.googleapis\.com/,
-      ""
-    );
-    console.log(modifiedUrl);
+    // const modifiedUrl = url.replace(
+    //   /^https:\/\/firebasestorage\.googleapis\.com/,
+    //   ""
+    // );
+    // console.log(modifiedUrl);
     // const xhr = new XMLHttpRequest(); // using xhr
     // xhr.responseType = "blob";
     // xhr.onload = (event) => {
@@ -106,16 +108,16 @@ function NewMessageInput({
     // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     // xhr.send();
 
-    axios // using axios
-      .get(`${proxyUrl}${modifiedUrl}`, { responseType: "blob" })
-      .then((response) => {
-        const blob = response.data;
-        console.log(blob);
-        fileDownload(blob, file.name); // fileDownload() is npm package
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    // axios // using axios
+    //   .get(`${proxyUrl}${modifiedUrl}`, { responseType: "blob" })
+    //   .then((response) => {
+    //     const blob = response.data;
+    //     console.log(blob);
+    //     fileDownload(blob, file.name); // fileDownload() is npm package
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   };
 
   const fileUploadDialogHandler = () => [
@@ -126,10 +128,8 @@ function NewMessageInput({
     setMessage(e.target.value);
   };
 
-  console.log(bufferData);
-
   const handleOnKeyDown = (e) => {
-    if (e.key === "Enter" && message !== "") {
+    if (e.key === "Enter" && message !== "" && !file) {
       if (chatType === "DIRECT") {
         if (replyToMessage === null) {
           const data = {
@@ -180,10 +180,10 @@ function NewMessageInput({
       }
       clearInput();
       return;
-    } else if (e.key === "Enter") {
+    } else if (e.key === "Enter" && file) {
       uploadFileToChat();
       setOpenFileUploadDialog(false);
-      // console.log(bufferData);
+      // setFile(null);
     } else {
       // logic for typing indicator
       const sender = store.getState().auth.userDetails?.name;
@@ -251,6 +251,16 @@ function NewMessageInput({
             />
           </IconButton>
         </div>
+        <a
+          href={url}
+          download={file?.name}
+          style={{
+            border: "2px solid red",
+            display: "block",
+            height: "100px",
+            width: "100px",
+          }}
+        ></a>
         <Input
           ref={inputRef}
           placeholder={

@@ -14,13 +14,10 @@ import store from "../store/store";
 import { setGroupList } from "../store/actions/groupChatActions";
 let socket = null;
 
-// const backendurl = 'http://localhost:5000/'
-const backendurl = "https://chatvibeserver.vercel.app/";
-
 export const connectWithSocketServer = (userDetails) => {
   const jwtToken = userDetails.token;
-  socket = io(backendurl, {
-    withCredentials: true,
+  socket = io("http://localhost:5000", {
+    // withCredentials: true,
     auth: {
       token: jwtToken,
     },
@@ -56,7 +53,7 @@ export const connectWithSocketServer = (userDetails) => {
   });
 
   socket.on("realTimeChatUpdate", (data) => {
-    console.log(data);
+    // console.log(data);
     store.dispatch(appendMessage(data));
   });
 
@@ -79,7 +76,7 @@ export const connectWithSocketServer = (userDetails) => {
 };
 
 export const directMessageHandler = (data) => {
-  // console.log(data);
+  console.log(data);
   socket?.emit("directMessage", data);
 };
 
