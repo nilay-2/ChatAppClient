@@ -44,7 +44,7 @@ function NewMessageInput({
 
   const [url, setUrl] = useState(null);
 
-  console.log(file);
+  // console.log(file);
   // input ref
   const inputRef = useRef(null);
   useEffect(() => {
