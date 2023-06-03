@@ -96,17 +96,17 @@ function NewMessageInput({
     //   ""
     // );
     // // console.log(modifiedUrl);
-    // const xhr = new XMLHttpRequest(); // using xhr
-    // xhr.responseType = "blob";
-    // xhr.onload = (event) => {
-    //   const blob = xhr.response;
-    //   console.log(blob);
-    //   fileDownload(blob, file.name);
-    // };
+    const xhr = new XMLHttpRequest(); // using xhr
+    xhr.responseType = "blob";
+    xhr.onload = (event) => {
+      const blob = xhr.response;
+      console.log(blob);
+      fileDownload(blob, file.name);
+    };
 
-    // xhr.open("GET", `${proxyUrl}${modifiedUrl}`);
+    xhr.open("GET", url);
     // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-    // xhr.send();
+    xhr.send();
 
     // axios // using axios
     //   .get(`${proxyUrl}${modifiedUrl}`, { responseType: "blob" })
