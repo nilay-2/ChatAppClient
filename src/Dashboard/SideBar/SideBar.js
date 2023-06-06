@@ -5,11 +5,12 @@ import GroupListItem from "./GroupListItem";
 import { connect } from "react-redux";
 const MainContainer = styled("div")({
   minWidth: "72px",
-  height: "100%",
+  height: "auto",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   backgroundColor: "#202225",
+  minHeight: "100vh",
 });
 
 function SideBar({ groups }) {

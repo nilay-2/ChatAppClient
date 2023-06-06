@@ -5,7 +5,7 @@ import Avatar from "../../shared/components/Avatar";
 import { getDateAndTime } from "../../shared/utils/dateFormatter";
 import MessageMenu from "./MessageMenu";
 import "../../css/messageContainer.css";
-
+import MessageElementFile from "../../shared/components/MessageElementFile";
 const MainContainer = styled("div")({
   width: "98%",
   display: "flex",
@@ -43,6 +43,7 @@ const SameAuthorMessageContent = styled("div")({
 const SameAuthorMessageText = styled("div")({
   display: "flex",
   alignItems: "center",
+  flexGrow: 1,
 });
 
 const DateBreaker = styled("div")({
@@ -79,6 +80,7 @@ const Message = ({
   messageReplyDetails,
   setHighlightElement,
   scrolledTo,
+  file,
 }) => {
   const [hover, setHover] = useState(false);
 
@@ -97,10 +99,8 @@ const Message = ({
     const handleSpanClick = (event) => {
       const messageId = event.target.getAttribute("data-message-id");
       const messageElement = document.getElementById(messageId);
-      // console.log(messageElement, messageId);
       messageElement?.scrollIntoView({
         behavior: "smooth",
-        // block: "start",
       });
     };
 
@@ -150,6 +150,7 @@ const Message = ({
             {hover ? getDateAndTime(date, "time") : ""}
           </span>
           {content}
+          {file ? <MessageElementFile file={file} /> : ""}
         </SameAuthorMessageText>
         <span>
           {hover ? (
@@ -219,7 +220,10 @@ const Message = ({
                 >{` ${getDateAndTime(date, "dateAndTime")}`}</span>
               </Typography>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <MessageContainer>{content}</MessageContainer>
+                <MessageContainer>
+                  {content}
+                  {file ? <MessageElementFile file={file} /> : ""}
+                </MessageContainer>
               </div>
             </MessageWrapper>
             {hover ? (
@@ -306,7 +310,10 @@ const Message = ({
                 >{` ${getDateAndTime(date, "dateAndTime")}`}</span>
               </Typography>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <MessageContainer>{content}</MessageContainer>
+                <MessageContainer>
+                  {content}
+                  {file ? <MessageElementFile file={file} /> : ""}
+                </MessageContainer>
               </div>
             </MessageWrapper>
             {hover ? (

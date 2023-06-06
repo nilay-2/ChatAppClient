@@ -67,6 +67,7 @@ function Messages({ chosenChatDetails, messages, replyToMessage }) {
                 changeMessageColor={
                   replyToMessage?.id === msg?._id ? true : false
                 }
+                file={msg?.file}
                 messageReplyDetails={msg?.messageReplyDetails}
                 setHighlightElement={setHighlightElement}
                 scrolledTo={

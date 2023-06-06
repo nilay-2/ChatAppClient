@@ -13,8 +13,9 @@ import "react-toastify/dist/ReactToastify.css";
 // import AppBar from "./AppBar/AppBar";
 const Wrapper = styled("div")({
   width: "100%",
-  height: "100vh",
+  height: "auto",
   display: "flex",
+  minHeight: "100vh",
 });
 
 function Dashboard({ setUserDetails, verifyUsersBeforeEnteringDashboard }) {

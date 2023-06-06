@@ -10,7 +10,8 @@ import MessageContent from "./MessageContent";
 const MainContainer = styled("div")({
   flexGrow: 1,
   backgroundColor: "#36393f",
-  height: "100%",
+  minHeight: "100vh",
+  height: "auto",
   display: "flex",
   flexDirection: "column",
   // justifyContent: "space-around",
@@ -19,7 +20,6 @@ const MainContainer = styled("div")({
 function Messenger({ chosenChatDetails, chatType }) {
   return (
     <MainContainer>
-      <div></div>
       <AppBar />
 
       {chosenChatDetails ? (

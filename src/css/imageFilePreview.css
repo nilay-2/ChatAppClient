@@ -1,0 +1,12 @@
+.file-preview-container {
+  margin-bottom: 5px;
+  padding-left: 5px;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+}
+
+.img-preview {
+  background-size: cover;
+  background-position: center;
+}

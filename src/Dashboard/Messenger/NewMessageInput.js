@@ -5,19 +5,18 @@ import {
   directMessageHandler,
   sendGroupMessage,
   sendTypingIndicatorEvent,
-  // sendStopTypingIndicatorEvent,
 } from "../../realtimeCommunication/socketConnection";
 import store from "../../store/store";
-// import { dividerClasses } from "@mui/material";
-import { getActions, setReplyToMessage } from "../../store/actions/chatActions";
+import { getActions } from "../../store/actions/chatActions";
 import "../../css/replyMessageDialog.css";
 import { IconButton } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../../firebase";
-import fileDownload from "js-file-download";
 import b64toBlob from "b64-to-blob";
+import OpenFileDialogBox from "../../shared/components/OpenFileDialogBox";
+import ImageFilePreview from "../../shared/components/ImageFilePreview";
 const Input = styled("input")({
   backgroundColor: "#202225",
   color: "#fff",
@@ -40,84 +39,50 @@ function NewMessageInput({
 
   const [openFileUploadDialog, setOpenFileUploadDialog] = useState(false);
 
-  const [bufferData, setBufferData] = useState(null);
+  const [imageName, setImageName] = useState(null);
 
-  const [url, setUrl] = useState(null);
-
-  // console.log(file);
   // input ref
   const inputRef = useRef(null);
   useEffect(() => {
     if (file || replyToMessage) inputRef.current.focus();
+    else inputRef.current.blur();
   }, [file, replyToMessage]);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-    // let b64;
-    // let mime;
-    // let fileData;
-    // const reader = new FileReader();
-    // reader.readAsDataURL(e.tar);
-    // reader.onload = function () {
-    //   var mimeType = reader.result.match(
-    //     /^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,/
-    //   )[1];
-    //   var base64Data = reader.result.split(",");
-    //   b64 = base64Data[1];
-    //   mime = mimeType;
-    //   console.log("only the b64", b64);
-    //   console.log("only the mime", mime);
-    //   const blob = b64toBlob(b64, mime); // runs asynchronously
-    //   console.log(blob);
-    //   setBufferData(blob);
-    //   // fileDownload(blob, `${file.name}`);
-    // };
-    // reader.onerror = function (error) {
-    //   console.log("Error: ", error);
-    // };
-  };
-
-  const uploadFileToChat = async () => {
+  const uploadFileToChat = async (data) => {
     if (file === null) return;
-    const fileRef = ref(storage, `ChatMedia/${file.name + v4()}`);
-    // uploadBytes(fileRef, file).then(() => {
-    //   console.log("file uploaded");
-    //   console.log(getDownloadURL(fileRef));
-    // });
-    await uploadBytes(fileRef, file);
-    const url = await getDownloadURL(fileRef);
-    console.log(url);
-    setUrl(url);
-    // const proxyUrl = "http://localhost:5000/proxy";
-    // const proxyUrl = "https://chatsphereserver.up.railway.app";
-
-    // const modifiedUrl = url.replace(
-    //   /^https:\/\/firebasestorage\.googleapis\.com/,
-    //   ""
-    // );
-    // // console.log(modifiedUrl);
-    const xhr = new XMLHttpRequest(); // using xhr
-    xhr.responseType = "blob";
-    xhr.onload = (event) => {
-      const blob = xhr.response;
-      console.log(blob);
-      fileDownload(blob, file.name);
-    };
-
-    xhr.open("GET", url);
-    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-    xhr.send();
-
-    // axios // using axios
-    //   .get(`${proxyUrl}${modifiedUrl}`, { responseType: "blob" })
-    //   .then((response) => {
-    //     const blob = response.data;
-    //     console.log(blob);
-    //     fileDownload(blob, file.name); // fileDownload() is npm package
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+    if (file.size / (1024 * 1024) > 2) {
+      alert("File size greater than 2MB");
+      return;
+    }
+    try {
+      const fileName = file.type.startsWith("image")
+        ? `${imageName}.jpeg`
+        : file.name;
+      console.log(fileName);
+      const fileRef = ref(storage, `ChatMedia/${fileName + v4()}`);
+      const uploadTask = uploadBytesResumable(fileRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(progress);
+        },
+        (error) => {
+          console.log(error);
+        },
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          if (url && chatType === "DIRECT") {
+            data.file.fileName = fileName;
+            data.file.url = url;
+            directMessageHandler(data);
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const fileUploadDialogHandler = () => [
@@ -181,9 +146,19 @@ function NewMessageInput({
       clearInput();
       return;
     } else if (e.key === "Enter" && file) {
-      uploadFileToChat();
+      const data = {
+        chatType,
+        receiverId: chosenChatDetails.id,
+        date: new Date(),
+        file: {
+          fileName: file?.name,
+          mimeType: file?.type,
+          size: `${file?.size}`,
+        },
+      };
+      uploadFileToChat(data);
       setOpenFileUploadDialog(false);
-      // setFile(null);
+      setFile(null);
     } else {
       // logic for typing indicator
       const sender = store.getState().auth.userDetails?.name;
@@ -232,16 +207,15 @@ function NewMessageInput({
       ) : (
         ""
       )}
+      {file && file.type?.startsWith("image") ? (
+        <ImageFilePreview image={file} setFile={setFile} />
+      ) : (
+        ""
+      )}
       <div style={{ display: "flex", alignItems: "center" }}>
         <div className="file-uploader-container">
           {openFileUploadDialog ? (
-            <div className="file-uploader">
-              <input type="file" id="file" onChange={handleFileChange} />
-              <label htmlFor="file" id="file-label">
-                <i className="bi bi-file-earmark-arrow-up-fill file-input-icon"></i>
-                <span className="file-input-content">Upload a File</span>
-              </label>
-            </div>
+            <OpenFileDialogBox setFile={setFile} setImageName={setImageName} />
           ) : (
             ""
           )}

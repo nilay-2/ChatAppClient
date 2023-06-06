@@ -8,7 +8,8 @@ import UserDetails from "./UserDetails/UserDetails";
 const MainContainer = styled("div")({
   // width: "224px",
   minWidth: "250px",
-  height: "100%",
+  minHeight: "100vh",
+  height: "auto",
   display: "flex",
   flexDirection: "column",
   // alignItems: "center",

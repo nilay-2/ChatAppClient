@@ -1,0 +1,9 @@
+.image-file-container {
+  width: auto;
+  height: auto;
+}
+
+.image-file-container img {
+  height: 280px;
+  width: auto;
+}
