@@ -51,7 +51,7 @@ export const sendFriendInvitation = async (data) => {
 
 export const logout = async () => {
   try {
-    return await apiClient.get("/users/logout", {
+    return await apiClient.delete("/users/logout", {
       withCredentials: true,
     });
   } catch (error) {
