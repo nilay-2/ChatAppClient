@@ -1,5 +1,6 @@
 import * as api from "../../api";
 import { openAlertMessage } from "./alertActions";
+import { frontEndUrl } from "../../shared/utils/url";
 export const authActions = {
   SET_USER_DETAILS: "AUTH.SET_USER_DETAILS",
 };
@@ -67,6 +68,7 @@ const logout = (navigate) => {
     } else {
       dispatch(openAlertMessage(response?.data?.message));
       navigate("/login");
+      window.location.href = `${frontEndUrl}/login`;
     }
   };
 };
