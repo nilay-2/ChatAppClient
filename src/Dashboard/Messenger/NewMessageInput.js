@@ -77,6 +77,10 @@ function NewMessageInput({
             data.file.fileName = fileName;
             data.file.url = url;
             directMessageHandler(data);
+          } else if (url && chatType === "GROUP") {
+            data.file.fileName = fileName;
+            data.file.url = url;
+            sendGroupMessage(data);
           }
         }
       );
@@ -146,17 +150,30 @@ function NewMessageInput({
       clearInput();
       return;
     } else if (e.key === "Enter" && file) {
-      const data = {
-        chatType,
-        receiverId: chosenChatDetails.id,
-        date: new Date(),
-        file: {
-          fileName: file?.name,
-          mimeType: file?.type,
-          size: `${file?.size}`,
-        },
-      };
-      uploadFileToChat(data);
+      if (chatType === "DIRECT") {
+        const data = {
+          chatType,
+          receiverId: chosenChatDetails.id,
+          date: new Date(),
+          file: {
+            fileName: file?.name,
+            mimeType: file?.type,
+            size: `${file?.size}`,
+          },
+        };
+        uploadFileToChat(data);
+      } else if (chatType === "GROUP") {
+        const data = {
+          ...chosenChatDetails,
+          date: new Date(),
+          file: {
+            fileName: file?.name,
+            mimeType: file?.type,
+            size: `${file?.size}`,
+          },
+        };
+        uploadFileToChat(data);
+      }
       setOpenFileUploadDialog(false);
       setFile(null);
     } else {
