@@ -13,7 +13,7 @@ export const getActions = (dispatch) => {
     setUserDetails: (userDetails) => dispatch(setUserDetails(userDetails)),
     verifyUsersBeforeEnteringDashboard: (navigate) =>
       dispatch(verifyUsersBeforeEnteringDashboard(navigate)),
-    logout: (navigate) => dispatch(logout(navigate)),
+    logout: () => dispatch(logout()),
   };
 };
 
@@ -59,7 +59,7 @@ const register = (userDetails, navigate) => {
   };
 };
 
-const logout = (navigate) => {
+const logout = () => {
   return async (dispatch) => {
     localStorage.removeItem("user");
     const response = await api.logout();
@@ -67,7 +67,6 @@ const logout = (navigate) => {
       dispatch(openAlertMessage(response?.exception?.response?.data?.message));
     } else {
       dispatch(openAlertMessage(response?.data?.message));
-      navigate("/login");
       window.location.href = `${frontEndUrl}/login`;
     }
   };

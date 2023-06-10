@@ -34,7 +34,7 @@ function DropDownMenu({ logout }) {
       >
         <MenuItem
           onClick={() => {
-            logout(navigate);
+            logout();
           }}
         >
           Logout

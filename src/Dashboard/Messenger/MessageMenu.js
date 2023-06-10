@@ -33,7 +33,10 @@ const MessageMenu = ({
   };
 
   const replyHandler = () => {
-    setreplyToMessage(messageDetails);
+    const replyToMessageDetails = { ...messageDetails };
+    if (replyToMessageDetails.file)
+      replyToMessageDetails.content = "Click to see attachment";
+    setreplyToMessage(replyToMessageDetails);
   };
 
   const handleClose = () => {

@@ -83,7 +83,6 @@ const Message = ({
   file,
 }) => {
   const [hover, setHover] = useState(false);
-
   // highligth scrolled element logic
   const highlightElement = (messageReplyDetails) => {
     setHighlightElement(messageReplyDetails);
@@ -155,7 +154,7 @@ const Message = ({
         <span>
           {hover ? (
             <MessageMenu
-              messageDetails={{ id, content, username, date }}
+              messageDetails={{ id, content, username, date, file }}
               userId={userId}
             />
           ) : (
@@ -228,7 +227,7 @@ const Message = ({
             </MessageWrapper>
             {hover ? (
               <MessageMenu
-                messageDetails={{ id, content, username, date, userId }}
+                messageDetails={{ id, content, username, date, userId, file }}
                 userId={userId}
               />
             ) : (
@@ -318,7 +317,7 @@ const Message = ({
             </MessageWrapper>
             {hover ? (
               <MessageMenu
-                messageDetails={{ id, content, username, date, userId }}
+                messageDetails={{ id, content, username, date, userId, file }}
                 userId={userId}
               />
             ) : (

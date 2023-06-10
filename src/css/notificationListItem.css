@@ -1,0 +1,35 @@
+.notify-item {
+  display: flex;
+  color: white;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  height: auto;
+  background-color: #2b3945;
+  padding: 4px;
+  margin: 6px 0px;
+}
+
+.notify-item:hover {
+  background-color: #27333e;
+}
+
+.notify-container {
+  display: flex;
+  align-items: center;
+  width: 75%;
+}
+
+.notify-container p {
+  margin: 0 0 0 8px;
+}
+
+.notify-item-username {
+  font-weight: bold;
+}
+
+.close-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

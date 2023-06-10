@@ -6,7 +6,6 @@ import FriendsListItem from "../FriendSideBar/FriendsList/FriendsListItem";
 import { Tooltip } from "@mui/material";
 import store from "../../store/store";
 import { onlineParticipants } from "../../shared/utils/onlineParticipants";
-
 const GroupParticipants = ({ chosenChatDetails }) => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("");
@@ -37,7 +36,6 @@ const GroupParticipants = ({ chosenChatDetails }) => {
           right: "0",
           zIndex: "10",
           boxShadow: "0px 0px 10px #232931",
-          // overflowX: `${openSidebar ? "none" : "hidden"}`,
           overflowX: "hidden",
           transition: "0.5s",
           overflowY: "auto",
