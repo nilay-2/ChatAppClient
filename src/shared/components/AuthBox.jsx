@@ -17,7 +17,7 @@ export default (props) => {
         sx={{
           background: "#36393f",
           width: "700px",
-          height: "400px",
+          height: "auto",
           borderRadius: "5px",
           display: "flex",
           flexDirection: "column",

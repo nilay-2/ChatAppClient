@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../../css/notificationListItem.css";
 import Avatar from "../components/Avatar";
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-const NotificationItem = () => {
+import NotificationMessage from "./NotificationMessage";
+const NotificationItem = ({ sender }) => {
   return (
     <div className="notify-item">
       <div className="notify-container">
-        <Avatar username="Nilay" customHeight={80} customWidth={80}></Avatar>
-        <p>
-          <span className="notify-item-username">Nilay</span> has accepted your
-          friend request
-        </p>
+        <Avatar
+          username={sender.senderId?.name}
+          customHeight={80}
+          customWidth={80}
+        ></Avatar>
+        <NotificationMessage
+          senderName={sender.senderId?.name}
+          date={sender?.date}
+          invtStatus={sender?.InvtStatus}
+        />
       </div>
       <div className="close-btn">
         <IconButton>

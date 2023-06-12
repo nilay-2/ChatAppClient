@@ -12,6 +12,7 @@ import {
 import { Typography } from "@mui/material";
 import { getActions } from "../../store/actions/friendsActions";
 import { connect } from "react-redux";
+import { sendInvtNotification } from "../../realtimeCommunication/socketConnection";
 function AddFriendDialog({
   isDialogOpen,
   closeDialogHandler,

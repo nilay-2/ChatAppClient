@@ -9,6 +9,7 @@ import {
   appendMessage,
   setMessages,
   toggleTypingIndicator,
+  setInvtNotifications,
 } from "../store/actions/chatActions";
 import store from "../store/store";
 import { setGroupList } from "../store/actions/groupChatActions";
@@ -73,6 +74,10 @@ export const connectWithSocketServer = (userDetails) => {
       store.dispatch(toggleTypingIndicator(senderDetails, false));
       // console.log("typing stopped");
     }, 2000);
+  });
+
+  socket.on("send_notification", (notifications) => {
+    store.dispatch(setInvtNotifications(notifications));
   });
 };
 

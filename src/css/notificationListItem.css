@@ -5,13 +5,14 @@
   justify-content: space-between;
   align-items: center;
   height: auto;
-  background-color: #2b3945;
+  background-color: #2f3136;
   padding: 4px;
-  margin: 6px 0px;
+  margin: 0px 0px 8px 0;
+  border-radius: 3px;
 }
 
 .notify-item:hover {
-  background-color: #27333e;
+  background-color: #29333c;
 }
 
 .notify-container {
@@ -32,4 +33,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.notification-date {
+  color: #aaaaaa;
+  font-size: small;
 }

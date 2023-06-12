@@ -17,6 +17,7 @@ export const chatActions = {
   SET_REPLY_MESSAGE: "SET_REPLY_MESSAGE",
   SET_DELETE_MESSAGE: "SET_DELETE_MESSAGE",
   DELETE_MESSAGE: "DELETE_MESSAGE",
+  SET_NOTIFICATIONS: "SET_NOTIFICATIONS",
 };
 
 export const getActions = (dispatch) => {
@@ -38,6 +39,8 @@ export const getActions = (dispatch) => {
     sendDeleteRequest: (message) => dispatch(sendDeleteRequest(message)),
     sendGroupMsgDeleteRequest: (data) =>
       dispatch(sendGroupMsgDeleteRequest(data)),
+    setInvtNotifications: (notifications) =>
+      dispatch(setInvtNotifications(notifications)),
   };
 };
 
@@ -158,5 +161,12 @@ const sendGroupMsgDeleteRequest = (data) => {
         theme: "dark",
       });
     }
+  };
+};
+
+export const setInvtNotifications = (notifications) => {
+  return {
+    type: chatActions.SET_NOTIFICATIONS,
+    notifications,
   };
 };

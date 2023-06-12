@@ -12,6 +12,7 @@ const initState = {
   },
   replyToMessage: null,
   messageToDelete: null,
+  invtNotifications: [],
 };
 
 const reducer = (state = initState, action) => {
@@ -67,6 +68,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         messages: [...filteredMessages],
+      };
+    case chatActions.SET_NOTIFICATIONS:
+      return {
+        ...state,
+        invtNotifications: action.notifications,
       };
     default:
       return state;

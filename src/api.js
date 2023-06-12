@@ -40,8 +40,6 @@ export const sendFriendInvitation = async (data) => {
       withCredentials: true,
     });
   } catch (error) {
-    // logout();
-    // console.log(error);
     return {
       error: true,
       exception: error,

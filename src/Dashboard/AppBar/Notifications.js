@@ -3,9 +3,9 @@ import { IconButton } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import "../../css/notification.css";
 import NotificationItem from "../../shared/components/NotificationItem";
-export default function Notifications() {
+import { connect } from "react-redux";
+function Notifications({ invtNotifications }) {
   const [openSidebar, setOpenSidebar] = useState(false);
-
   const openSideBarHandler = () => {
     setOpenSidebar(!openSidebar);
   };
@@ -15,7 +15,11 @@ export default function Notifications() {
         // style={{ padding: "20px 0 20px 0" }}
         className="notificationNumContainer"
       >
-        <div className="notificationNum">2</div>
+        {invtNotifications.length ? (
+          <div className="notificationNum">{invtNotifications.length}</div>
+        ) : (
+          ""
+        )}
         <IconButton onClick={openSideBarHandler}>
           <NotificationsIcon sx={{ color: "#fff" }}></NotificationsIcon>
         </IconButton>
@@ -36,8 +40,8 @@ export default function Notifications() {
             padding: "4px",
           }}
         >
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((val, i) => {
-            return <NotificationItem key={i} />;
+          {invtNotifications.map((senderDetail, i) => {
+            return <NotificationItem key={i} sender={senderDetail} />;
           })}
         </div>
       ) : (
@@ -46,3 +50,11 @@ export default function Notifications() {
     </Fragment>
   );
 }
+
+const mapStateToProps = ({ chat }) => {
+  return {
+    ...chat,
+  };
+};
+
+export default connect(mapStateToProps)(Notifications);

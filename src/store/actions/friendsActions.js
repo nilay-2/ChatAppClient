@@ -47,7 +47,7 @@ const sendFriendInvitation = (data, closeDialogHandler) => {
   return async (dispatch) => {
     const response = await api.sendFriendInvitation(data);
     if (response.error) {
-      console.log(response);
+      // console.log(response);
       dispatch(openAlertMessage(response.exception?.response?.data.message));
     } else {
       console.log(response);
