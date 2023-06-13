@@ -170,3 +170,35 @@ export const deleteGroupMessage = async (data) => {
     };
   }
 };
+
+export const markNotificationAsRead = async (id) => {
+  try {
+    return await apiClient.patch(
+      `/notification/${id}/markAsRead`,
+      { data: "notify" },
+      {
+        withCredentials: true,
+      }
+    );
+  } catch (error) {
+    return {
+      error: true,
+      exception: error,
+    };
+  }
+};
+
+export const markAllNotificationsAsRead = async () => {
+  try {
+    return await apiClient.patch(
+      "/notification/markAllAsRead",
+      { data: "notify" },
+      { withCredentials: true }
+    );
+  } catch (error) {
+    return {
+      error: true,
+      exception: error,
+    };
+  }
+};
