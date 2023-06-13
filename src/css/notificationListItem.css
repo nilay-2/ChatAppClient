@@ -1,14 +1,12 @@
 .notify-item {
   display: flex;
-  color: white;
+  color: rgb(201, 198, 198);
   width: 100%;
   justify-content: space-between;
   align-items: center;
   height: auto;
   background-color: #2f3136;
-  padding: 4px;
-  margin: 0px 0px 8px 0;
-  border-radius: 3px;
+  padding: 10px;
 }
 
 .notify-item:hover {

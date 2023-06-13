@@ -18,6 +18,9 @@ export const chatActions = {
   SET_DELETE_MESSAGE: "SET_DELETE_MESSAGE",
   DELETE_MESSAGE: "DELETE_MESSAGE",
   SET_NOTIFICATIONS: "SET_NOTIFICATIONS",
+  DECREMENT_COUNTER: "DECREMENT_COUNTER",
+  UPDATE_MARK_AS_READ: "UPDATE_MARK_AS_READ",
+  UPDATE_MARK_ALL_AS_READ: "UPDATE_MARK_ALL_AS_READ",
 };
 
 export const getActions = (dispatch) => {
@@ -41,6 +44,11 @@ export const getActions = (dispatch) => {
       dispatch(sendGroupMsgDeleteRequest(data)),
     setInvtNotifications: (notifications) =>
       dispatch(setInvtNotifications(notifications)),
+    decrementCounter: (value) => dispatch(decrementCounter(value)),
+    markAsRead: (id, value) => dispatch(markAsRead(id, value)),
+    updateMarkAsReadUi: (id) => dispatch(updateMarkAsReadUi(id)),
+    markAllAsRead: (value) => dispatch(markAllAsRead(value)),
+    updatemarkAllAsReadUi: () => dispatch(updatemarkAllAsReadUi()),
   };
 };
 
@@ -164,9 +172,55 @@ const sendGroupMsgDeleteRequest = (data) => {
   };
 };
 
+const markAsRead = (id, value) => {
+  return async (dispatch) => {
+    const response = await api.markNotificationAsRead(id);
+    console.log(response);
+    if (response.data?.status === "success") {
+      dispatch(updateMarkAsReadUi(id));
+      dispatch(decrementCounter(value));
+    } else if (response?.error) {
+      console.log(response.exception.response.data?.message);
+    }
+  };
+};
+
+const updateMarkAsReadUi = (id) => {
+  return {
+    type: chatActions.UPDATE_MARK_AS_READ,
+    id,
+  };
+};
+
 export const setInvtNotifications = (notifications) => {
   return {
     type: chatActions.SET_NOTIFICATIONS,
     notifications,
+  };
+};
+
+const decrementCounter = (value) => {
+  return {
+    type: chatActions.DECREMENT_COUNTER,
+    value,
+  };
+};
+
+const markAllAsRead = (value) => {
+  return async (dispatch) => {
+    const response = await api.markAllNotificationsAsRead();
+    console.log(response);
+    if (response.data.status === "success") {
+      dispatch(updatemarkAllAsReadUi());
+      dispatch(decrementCounter(value));
+    } else if (response.error) {
+      console.log(response.exception.response.data?.message);
+    }
+  };
+};
+
+const updatemarkAllAsReadUi = () => {
+  return {
+    type: chatActions.UPDATE_MARK_ALL_AS_READ,
   };
 };

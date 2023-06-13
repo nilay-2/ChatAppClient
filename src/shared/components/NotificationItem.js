@@ -2,28 +2,48 @@ import React, { useState, useEffect } from "react";
 import "../../css/notificationListItem.css";
 import Avatar from "../components/Avatar";
 import { IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import NotificationMessage from "./NotificationMessage";
-const NotificationItem = ({ sender }) => {
+import DoneIcon from "@mui/icons-material/Done";
+const NotificationItem = ({
+  sender,
+  InvtStatus,
+  date,
+  read,
+  id,
+  markAsReadFunc,
+  notificationCount,
+}) => {
+  const markAsReadHandler = (id) => {
+    markAsReadFunc(id, notificationCount - 1);
+  };
+
   return (
     <div className="notify-item">
       <div className="notify-container">
         <Avatar
-          username={sender.senderId?.name}
-          customHeight={80}
-          customWidth={80}
+          username={sender?.name}
+          customHeight={42}
+          customWidth={42}
         ></Avatar>
         <NotificationMessage
-          senderName={sender.senderId?.name}
-          date={sender?.date}
-          invtStatus={sender?.InvtStatus}
+          senderName={sender?.name}
+          date={date}
+          invtStatus={InvtStatus}
         />
       </div>
-      <div className="close-btn">
-        <IconButton>
-          <CloseIcon sx={{ color: "white" }} />
-        </IconButton>
-      </div>
+      {!read ? (
+        <div className="close-btn">
+          <IconButton
+            onClick={() => {
+              markAsReadHandler(id);
+            }}
+          >
+            <DoneIcon sx={{ color: "white" }} fontSize="small" />
+          </IconButton>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

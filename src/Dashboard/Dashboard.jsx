@@ -11,6 +11,7 @@ import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import AppBar from "./AppBar/AppBar";
+import "../App.css";
 const Wrapper = styled("div")({
   width: "100%",
   height: "auto",

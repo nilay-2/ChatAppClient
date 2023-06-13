@@ -6,9 +6,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 15px;
-  height: 15px;
-  font-size: 12px;
+  width: 12px;
+  height: 12px;
+  font-size: 13px;
   padding: 10px;
   border-radius: 50%;
   background-color: red;
@@ -16,4 +16,22 @@
   font-weight: bold;
   position: absolute;
   right: 0;
+  z-index: 1;
+}
+
+.notification-header {
+  height: 50px;
+  width: 100%;
+  background-color: #28282b;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  justify-content: space-between;
+}
+
+.notification-header span {
+  font-size: 18px;
+  color: white;
+  margin-left: 10px;
+  font-weight: 700;
 }
