@@ -1,4 +1,3 @@
-import { CallToActionSharp, FastRewindOutlined } from "@mui/icons-material";
 import { chatActions } from "../actions/chatActions";
 
 const initState = {
@@ -14,6 +13,7 @@ const initState = {
   messageToDelete: null,
   invtNotifications: [],
   notificationCount: null,
+  messageNotification: [],
 };
 
 const reducer = (state = initState, action) => {
@@ -105,6 +105,28 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         invtNotifications: readNotifications,
+      };
+    case chatActions.SET_MESSAGE_NOTIFICATION:
+      return {
+        ...state,
+        messageNotification: action.notification,
+      };
+    case chatActions.APPEND_MESSAGE_NOTIFICATION:
+      const updateMessageNotification = [...state.messageNotification];
+      updateMessageNotification.push(action.notification);
+      return {
+        ...state,
+        messageNotification: updateMessageNotification,
+      };
+    case chatActions.READ_NOTIFICATION:
+      const updatedNotifyArray = state.messageNotification.filter(
+        (notification) => {
+          return !action.notifications.includes(notification._id);
+        }
+      );
+      return {
+        ...state,
+        messageNotification: updatedNotifyArray,
       };
     default:
       return state;

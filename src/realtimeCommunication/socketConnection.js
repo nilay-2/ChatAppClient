@@ -7,9 +7,10 @@ import {
 } from "../store/actions/friendsActions";
 import {
   appendMessage,
-  setMessages,
   toggleTypingIndicator,
   setInvtNotifications,
+  setMessageNotification,
+  appendMessageNotification,
 } from "../store/actions/chatActions";
 import store from "../store/store";
 import { setGroupList } from "../store/actions/groupChatActions";
@@ -55,12 +56,25 @@ export const connectWithSocketServer = (userDetails) => {
   });
 
   socket.on("realTimeChatUpdate", (data) => {
-    // console.log(data);
+    // if user has not selected any chat
+    if (!store.getState().chat.chosenChatDetails) {
+      // console.log(data);
+      sendChatNotification(socket, data);
+    }
+    // if user is chatting with someone else
+    if (
+      store.getState().chat.chosenChatDetails &&
+      store.getState().chat.chosenChatDetails?.id !== data.author?._id && // this will give notification to both the sender and the receiver which we dont want
+      store.getState().auth.userDetails?._id !== data.author?._id // author and the other logged-in person should be different or else both will receive the notification
+    ) {
+      // console.log(data);
+      sendChatNotification(socket, data);
+    }
     store.dispatch(appendMessage(data));
   });
 
   socket.on("recieve_group_message", (groupChatMessages) => {
-    console.log(groupChatMessages);
+    // console.log(groupChatMessages);
     store.dispatch(appendMessage(groupChatMessages));
   });
 
@@ -79,10 +93,20 @@ export const connectWithSocketServer = (userDetails) => {
   socket.on("send_notification", (notifications) => {
     store.dispatch(setInvtNotifications(notifications));
   });
+  // receive chat notification
+  socket.on("receive_chat_notification", (chatNotification) => {
+    // console.log(chatNotification);
+    store.dispatch(appendMessageNotification(chatNotification));
+  });
+
+  socket.on("initial_chat_notification_update", (chatNotification) => {
+    // console.log(chatNotification);
+    store.dispatch(setMessageNotification(chatNotification));
+  });
 };
 
 export const directMessageHandler = (data) => {
-  console.log(data);
+  // console.log(data);
   socket?.emit("directMessage", data);
 };
 
@@ -110,4 +134,9 @@ export const sendTypingIndicatorEvent = (data) => {
 
 export const sendStopTypingIndicatorEvent = (data) => {
   socket?.emit("send_stop_typing_indicator_event", data);
+};
+
+// send chat notification
+const sendChatNotification = (socket, data) => {
+  socket.emit("chat_notification", data);
 };

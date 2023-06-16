@@ -1,13 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styled } from "@mui/system";
 import FriendsListItem from "./FriendsListItem";
 import { connect } from "react-redux";
 import { getActions } from "../../../store/actions/friendsActions";
 import store from "../../../store/store";
-import {
-  setOnlineUsers,
-  checkIfFriendIsOnline,
-} from "../../../store/actions/friendsActions";
+import { getSenderNotificationCount } from "../../../shared/utils/directChatNotification";
 const MainContainer = styled("div")({
   flexGrow: 1,
   width: "100%",
@@ -16,7 +13,7 @@ const MainContainer = styled("div")({
   marginBottom: "15px",
 });
 
-function FriendsList({ friends, onlineFriends, onlineUsers }) {
+function FriendsList({ onlineFriends }) {
   return (
     <MainContainer>
       {onlineFriends?.map((f, i) => {
@@ -25,8 +22,11 @@ function FriendsList({ friends, onlineFriends, onlineUsers }) {
             username={f.friendId?.name}
             isOnline={f?.isOnline}
             id={f.friendId?._id}
-            // key={f.friendId._id}
             key={i}
+            notifications={getSenderNotificationCount(
+              store.getState().chat.messageNotification,
+              f.friendId?._id
+            )}
             activeStatus={
               store.getState().chat.chosenChatDetails?.username ===
               f.friendId?.name

@@ -9,10 +9,11 @@ export default function OnlineIndicator() {
         display: "flex",
         alignItems: "center",
         position: "absolute",
-        right: "5px",
+        bottom: "-4px",
+        right: "-4px",
       }}
     >
-      <FiberManualRecord />
+      <FiberManualRecord fontSize="small" />
     </Box>
   );
 }

@@ -50,7 +50,7 @@ const sendFriendInvitation = (data, closeDialogHandler) => {
       // console.log(response);
       dispatch(openAlertMessage(response.exception?.response?.data.message));
     } else {
-      console.log(response);
+      // console.log(response);
       dispatch(openAlertMessage(response.data?.message));
       closeDialogHandler();
     }
@@ -60,7 +60,7 @@ const sendFriendInvitation = (data, closeDialogHandler) => {
 const acceptFriendInvitation = (data) => {
   return async (dispatch) => {
     const response = await api.acceptFriendInvitation(data);
-    console.log(response);
+    // console.log(response);
     if (response.error) {
       dispatch(openAlertMessage(response.exception?.response?.data.message));
     } else {
@@ -72,7 +72,7 @@ const acceptFriendInvitation = (data) => {
 const rejectFriendInvitation = (data) => {
   return async (dispatch) => {
     const response = await api.rejectFriendInvitation(data);
-    console.log(response);
+    // console.log(response);
     if (response.error) {
       dispatch(openAlertMessage(response.exception?.response?.data.message));
     } else {

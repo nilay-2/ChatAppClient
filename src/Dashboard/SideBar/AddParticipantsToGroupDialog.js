@@ -141,7 +141,7 @@ const AddParticipantsToGroupDialog = ({
   // send group chat data to the server
   const submitGroupChatData = async () => {
     const res = await createGroupChat({ groupName, friendsAdded });
-    console.log(res);
+    // console.log(res);
     setFriendsAdded([]);
     setQuery("");
     setGroupName("");

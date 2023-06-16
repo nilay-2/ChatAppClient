@@ -1,5 +1,5 @@
 // import { toggleButtonClasses } from "@mui/material";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import * as api from "../../api";
 export const chatType = {
   DIRECT: "DIRECT",
@@ -21,6 +21,9 @@ export const chatActions = {
   DECREMENT_COUNTER: "DECREMENT_COUNTER",
   UPDATE_MARK_AS_READ: "UPDATE_MARK_AS_READ",
   UPDATE_MARK_ALL_AS_READ: "UPDATE_MARK_ALL_AS_READ",
+  SET_MESSAGE_NOTIFICATION: "SET_MESSAGE_NOTIFICATION",
+  APPEND_MESSAGE_NOTIFICATION: "APPEND_MESSAGE_NOTIFICATION",
+  READ_NOTIFICATION: "READ_NOTIFICATION",
 };
 
 export const getActions = (dispatch) => {
@@ -49,6 +52,8 @@ export const getActions = (dispatch) => {
     updateMarkAsReadUi: (id) => dispatch(updateMarkAsReadUi(id)),
     markAllAsRead: (value) => dispatch(markAllAsRead(value)),
     updatemarkAllAsReadUi: () => dispatch(updatemarkAllAsReadUi()),
+    readNotification: (notifications) =>
+      dispatch(readNotification(notifications)),
   };
 };
 
@@ -129,7 +134,7 @@ const deleteMessage = () => {
 const sendDeleteRequest = (messageToBeDeleted) => {
   return async (dispatch) => {
     const response = await api.deleteMessage(messageToBeDeleted);
-    console.log(response);
+    // console.log(response);
     const { status, message } = response?.data;
     if (status === "success") {
       dispatch(deleteMessage());
@@ -152,7 +157,7 @@ const sendDeleteRequest = (messageToBeDeleted) => {
 const sendGroupMsgDeleteRequest = (data) => {
   return async (dispatch) => {
     const response = await api.deleteGroupMessage(data);
-    console.log(response);
+    // console.log(response);
     const { status, message } = response?.data;
     if (status === "success") {
       dispatch(deleteMessage());
@@ -175,7 +180,7 @@ const sendGroupMsgDeleteRequest = (data) => {
 const markAsRead = (id, value) => {
   return async (dispatch) => {
     const response = await api.markNotificationAsRead(id);
-    console.log(response);
+    // console.log(response);
     if (response.data?.status === "success") {
       dispatch(updateMarkAsReadUi(id));
       dispatch(decrementCounter(value));
@@ -209,10 +214,15 @@ const decrementCounter = (value) => {
 const markAllAsRead = (value) => {
   return async (dispatch) => {
     const response = await api.markAllNotificationsAsRead();
-    console.log(response);
+    // console.log(response);
     if (response.data.status === "success") {
       dispatch(updatemarkAllAsReadUi());
       dispatch(decrementCounter(value));
+      toast.success(response.data?.message, {
+        theme: "dark",
+        position: "top-right",
+        autoClose: 4000,
+      });
     } else if (response.error) {
       console.log(response.exception.response.data?.message);
     }
@@ -222,5 +232,26 @@ const markAllAsRead = (value) => {
 const updatemarkAllAsReadUi = () => {
   return {
     type: chatActions.UPDATE_MARK_ALL_AS_READ,
+  };
+};
+
+const readNotification = (notifications) => {
+  return {
+    type: chatActions.READ_NOTIFICATION,
+    notifications,
+  };
+};
+
+export const setMessageNotification = (notification) => {
+  return {
+    type: chatActions.SET_MESSAGE_NOTIFICATION,
+    notification,
+  };
+};
+
+export const appendMessageNotification = (notification) => {
+  return {
+    type: chatActions.APPEND_MESSAGE_NOTIFICATION,
+    notification,
   };
 };

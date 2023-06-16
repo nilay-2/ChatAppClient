@@ -13,7 +13,7 @@ function Notifications({
   decrementCounter,
   markAllAsRead,
 }) {
-  const [openSidebar, setOpenSidebar] = useState(true);
+  const [openSidebar, setOpenSidebar] = useState(false);
 
   const openSideBarHandler = () => {
     setOpenSidebar(!openSidebar);

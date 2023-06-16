@@ -25,8 +25,8 @@ export default function Avatar({
   return (
     <AvatarPreview
       style={{
-        height: `${customHeight}px`,
-        width: `${customWidth}px`,
+        height: `${customHeight}`,
+        width: `${customWidth}`,
         fontSize: `${fontSize ? fontSize : null}`,
       }}
     >

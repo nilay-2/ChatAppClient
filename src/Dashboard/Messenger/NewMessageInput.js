@@ -58,7 +58,7 @@ function NewMessageInput({
       const fileName = file.type.startsWith("image")
         ? `${imageName}.jpeg`
         : file.name;
-      console.log(fileName);
+      // console.log(fileName);
       const fileRef = ref(storage, `ChatMedia/${fileName + v4()}`);
       const uploadTask = uploadBytesResumable(fileRef, file);
       uploadTask.on(
@@ -66,7 +66,7 @@ function NewMessageInput({
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(progress);
+          // console.log(progress);
         },
         (error) => {
           console.log(error);
