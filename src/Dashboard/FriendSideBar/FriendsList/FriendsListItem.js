@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import { Button } from "@mui/material";
 import Avatar from "../../../shared/components/Avatar";
 import { Typography } from "@mui/material";
 import OnlineIndicator from "./OnlineIndicator";
 import { getActions } from "../../../store/actions/chatActions";
 import { connect } from "react-redux";
+import ChatNotify from "./ChatNotify";
 function FriendsListItem({
   disabled = false,
   isOnline,
@@ -14,11 +14,13 @@ function FriendsListItem({
   setChosenChatDetails,
   currentUserId = "",
   activeStatus,
+  notifications,
+  readNotification,
 }) {
   const handleChatDetails = () => {
     setChosenChatDetails({ id, username }, "DIRECT");
+    readNotification(notifications);
   };
-
   return (
     <div>
       <Button
@@ -38,7 +40,18 @@ function FriendsListItem({
           backgroundColor: `${activeStatus ? "#2b3945" : ""}`,
         }}
       >
-        <Avatar username={username} />
+        <div
+          className="avatar-container"
+          style={{
+            borderRadius: "30%",
+            height: "fit-content",
+            width: "fit-content",
+            position: "relative",
+          }}
+        >
+          <Avatar username={username} customHeight="44px" customWidth="44px" />
+          {isOnline ? <OnlineIndicator /> : ""}
+        </div>
         <Typography
           style={{
             marginLeft: "7px",
@@ -50,7 +63,11 @@ function FriendsListItem({
         >
           {id === currentUserId ? "You" : username}
         </Typography>
-        {isOnline ? <OnlineIndicator /> : ""}
+        {notifications.length ? (
+          <ChatNotify notifications={notifications} />
+        ) : (
+          ""
+        )}
       </Button>
     </div>
   );

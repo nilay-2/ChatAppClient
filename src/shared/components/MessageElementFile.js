@@ -22,13 +22,13 @@ const MessageElementFile = ({ file }) => {
   const [disable, setDisable] = useState(false);
   // function to download file
   const downloadFile = (url) => {
-    console.log(url);
+    // console.log(url);
     setDisable(true);
     const xhr = new XMLHttpRequest(); // using xhr to download files as mentioned in the firebase documentation
     xhr.responseType = "blob";
     xhr.onload = (event) => {
       const blob = xhr.response;
-      console.log(blob);
+      // console.log(blob);
       if (blob) {
         setDisable(false);
         fileDownload(blob, file.fileName);

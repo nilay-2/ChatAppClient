@@ -32,7 +32,7 @@ const login = (userDetails, navigate) => {
     } else {
       const { user, token } = response?.data;
       user.token = token;
-      console.log(user);
+      // console.log(user);
       localStorage.setItem("user", JSON.stringify(user));
 
       dispatch(setUserDetails(user));
@@ -50,7 +50,7 @@ const register = (userDetails, navigate) => {
     } else {
       const { user, token } = response?.data;
       user.token = token;
-      console.log(user);
+      // console.log(user);
       localStorage.setItem("user", JSON.stringify(user));
       dispatch(setUserDetails(user));
       // navigate("/dashboard");
@@ -76,7 +76,7 @@ const verifyUsersBeforeEnteringDashboard = (navigate) => {
   return async (dispatch) => {
     const response = await api.protectRoute();
     if (response.error) {
-      console.log(response);
+      // console.log(response);
       dispatch(openAlertMessage(response?.expection?.response?.data?.message));
       navigate("/login");
       return false;
