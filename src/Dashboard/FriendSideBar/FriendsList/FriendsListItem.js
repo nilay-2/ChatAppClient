@@ -15,11 +15,11 @@ function FriendsListItem({
   currentUserId = "",
   activeStatus,
   notifications,
-  readNotification,
+  sendReadNotificationRequest,
 }) {
   const handleChatDetails = () => {
     setChosenChatDetails({ id, username }, "DIRECT");
-    readNotification(notifications);
+    sendReadNotificationRequest(notifications);
   };
   return (
     <div>
