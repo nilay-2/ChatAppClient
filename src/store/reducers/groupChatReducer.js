@@ -2,6 +2,7 @@ import { groupChatActions } from "../actions/groupChatActions";
 
 const initState = {
   groups: [],
+  groupNotifications: [],
 };
 
 const reducer = (state = initState, action) => {
@@ -11,7 +12,18 @@ const reducer = (state = initState, action) => {
         ...state,
         groups: action.groupList,
       };
-
+    case groupChatActions.SET_NOTIFICATION:
+      return {
+        ...state,
+        groupNotifications: action.notifications,
+      };
+    case groupChatActions.APPEND_NOTIFICATION:
+      const updatedNotification = [...state.groupNotifications];
+      updatedNotification.push(action.notification);
+      return {
+        ...state,
+        groupNotifications: updatedNotification,
+      };
     default:
       return state;
   }

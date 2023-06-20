@@ -1,17 +1,14 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
 import { styled } from "@mui/system";
 import NewMessageInput from "./NewMessageInput";
 import Messages from "./Messages";
 import { connect } from "react-redux";
-import { getRealTimeChatUpdates } from "../../realtimeCommunication/socketConnection";
 import { getActions } from "../../store/actions/chatActions";
-import { Typography } from "@mui/material";
 import store from "../../store/store";
 import Loading from "../../shared/components/Loading";
 import ChatLoading from "../../shared/components/ChatLoading";
 const Wrapper = styled("div")({
   flexGrow: 1,
-  // justifyContent: "space-between",
 });
 const InputWrapper = styled("div")({});
 
@@ -39,11 +36,7 @@ function MessageContent({
       const id = chosenChatDetails?._id;
       getInitialGroupChatHistory(id);
     }
-  }, [chosenChatDetails]);
-  {
-    /*<div style={{ border: "2px solid red", height: "100%" }}>
-</div>*/
-  }
+  }, [chosenChatDetails, chatType]);
 
   return (
     <Fragment>
