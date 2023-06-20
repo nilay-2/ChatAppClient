@@ -74,7 +74,8 @@ export const connectWithSocketServer = (userDetails) => {
       store.getState().chat.chosenChatDetails?.id !== data.author?._id && // this will give notification to both the sender and the receiver which we dont want
       store.getState().auth.userDetails?._id !== data.author?._id // author and the other logged-in person should be different or else both will receive the notification
     ) {
-      // console.log(data);
+      // console.log("true");
+      console.log(data);
       sendChatNotification(socket, data);
     }
     store.dispatch(appendMessage(data));
@@ -85,7 +86,7 @@ export const connectWithSocketServer = (userDetails) => {
     const receiverId = store.getState().auth.userDetails._id;
     // user has not seletected any group chat
     const data = { groupChatMessages, receiverId };
-    if (!selectedChat) {
+    if (!selectedChat && receiverId !== groupChatMessages.author?._id) {
       // console.log(groupChatMessages);
       sendGroupChatNotification(socket, data);
     }
@@ -167,4 +168,14 @@ const sendChatNotification = (socket, data) => {
 
 const sendGroupChatNotification = (socket, data) => {
   socket.emit("send_groupChat_notification", data);
+};
+
+export const readGroupNotification = (notifications) => {
+  const userId = store.getState().auth.userDetails?._id;
+  socket?.emit("read_group_notification", { notifications, userId });
+};
+
+export const readDirectChatNotification = (notifications) => {
+  const userId = store.getState().auth.userDetails?._id;
+  socket?.emit("read_direct_chat_notification", { notifications, userId });
 };

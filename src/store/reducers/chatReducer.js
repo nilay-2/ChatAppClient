@@ -118,16 +118,6 @@ const reducer = (state = initState, action) => {
         ...state,
         messageNotification: updateMessageNotification,
       };
-    case chatActions.READ_NOTIFICATION:
-      const updatedNotifyArray = state.messageNotification.filter(
-        (notification) => {
-          return !action.notifications.includes(notification._id);
-        }
-      );
-      return {
-        ...state,
-        messageNotification: updatedNotifyArray,
-      };
     default:
       return state;
   }
