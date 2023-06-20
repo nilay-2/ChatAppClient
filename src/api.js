@@ -1,7 +1,9 @@
 import axios from "axios";
-import { backEndUrl } from "./shared/utils/url";
+import { devBackEndUrl, prodBackEndUrl } from "./shared/utils/url";
 const apiClient = axios.create({
-  baseURL: `${backEndUrl}/api`,
+  baseURL: `${
+    process.env.NODE_ENV === "development" ? devBackEndUrl : prodBackEndUrl
+  }/api`,
   timeout: 5000,
   headers: {
     "Access-Control-Allow-Origin": "*",

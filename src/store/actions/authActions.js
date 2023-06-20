@@ -1,6 +1,6 @@
 import * as api from "../../api";
 import { openAlertMessage } from "./alertActions";
-import { frontEndUrl } from "../../shared/utils/url";
+import { devFrontEndUrl, prodFrontEndUrl } from "../../shared/utils/url";
 export const authActions = {
   SET_USER_DETAILS: "AUTH.SET_USER_DETAILS",
 };
@@ -67,7 +67,11 @@ const logout = () => {
       dispatch(openAlertMessage(response?.exception?.response?.data?.message));
     } else {
       dispatch(openAlertMessage(response?.data?.message));
-      window.location.href = `${frontEndUrl}/login`;
+      window.location.href = `${
+        process.env.NODE_ENV === "development"
+          ? devFrontEndUrl
+          : prodFrontEndUrl
+      }/login`;
     }
   };
 };

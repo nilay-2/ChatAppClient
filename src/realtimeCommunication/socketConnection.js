@@ -12,19 +12,26 @@ import {
   setMessageNotification,
   appendMessageNotification,
 } from "../store/actions/chatActions";
+import {
+  setNotification,
+  appendNotification,
+} from "../store/actions/groupChatActions";
 import store from "../store/store";
 import { setGroupList } from "../store/actions/groupChatActions";
-import { backEndUrl } from "../shared/utils/url";
+import { devBackEndUrl, prodBackEndUrl } from "../shared/utils/url";
 let socket = null;
 
 export const connectWithSocketServer = (userDetails) => {
   const jwtToken = userDetails.token;
-  socket = io(backEndUrl, {
-    withCredentials: true,
-    auth: {
-      token: jwtToken,
-    },
-  });
+  socket = io(
+    process.env.NODE_ENV === "development" ? devBackEndUrl : prodBackEndUrl,
+    {
+      withCredentials: true,
+      auth: {
+        token: jwtToken,
+      },
+    }
+  );
 
   socket.on("connect", () => {
     // console.log("successfully connected with socket.io server");
@@ -74,7 +81,20 @@ export const connectWithSocketServer = (userDetails) => {
   });
 
   socket.on("recieve_group_message", (groupChatMessages) => {
-    // console.log(groupChatMessages);
+    const selectedChat = store.getState().chat.chosenChatDetails;
+    const receiverId = store.getState().auth.userDetails._id;
+    // user has not seletected any group chat
+    const data = { groupChatMessages, receiverId };
+    if (!selectedChat) {
+      // console.log(groupChatMessages);
+      sendGroupChatNotification(socket, data);
+    }
+
+    // selected chat and receiving chat details are different
+    if (selectedChat && selectedChat?._id !== groupChatMessages.groupId?._id) {
+      // console.log(groupChatMessages);
+      sendGroupChatNotification(socket, data);
+    }
     store.dispatch(appendMessage(groupChatMessages));
   });
 
@@ -95,7 +115,7 @@ export const connectWithSocketServer = (userDetails) => {
   });
   // receive chat notification
   socket.on("receive_chat_notification", (chatNotification) => {
-    // console.log(chatNotification);
+    console.log(chatNotification);
     store.dispatch(appendMessageNotification(chatNotification));
   });
 
@@ -103,19 +123,23 @@ export const connectWithSocketServer = (userDetails) => {
     // console.log(chatNotification);
     store.dispatch(setMessageNotification(chatNotification));
   });
+
+  socket.on("receive_groupChat_notification", (groupChatNotification) => {
+    const currUser = store.getState().auth.userDetails?._id;
+    if (currUser === groupChatNotification?.receiverId) {
+      // console.log(true);
+      store.dispatch(appendNotification(groupChatNotification));
+    }
+  });
+
+  socket.on("initial_group_notification_update", (groupChatNotifications) => {
+    store.dispatch(setNotification(groupChatNotifications));
+  });
 };
 
 export const directMessageHandler = (data) => {
   // console.log(data);
   socket?.emit("directMessage", data);
-};
-
-export const getRealTimeChatUpdates = () => {
-  socket?.on("realTimeChatUpdate", (data) => {
-    // console.log(data);
-    store.dispatch(appendMessage(data));
-    // store.dispatch(setMessages(data));
-  });
 };
 
 export const joinGroup = (data) => {
@@ -139,4 +163,8 @@ export const sendStopTypingIndicatorEvent = (data) => {
 // send chat notification
 const sendChatNotification = (socket, data) => {
   socket.emit("chat_notification", data);
+};
+
+const sendGroupChatNotification = (socket, data) => {
+  socket.emit("send_groupChat_notification", data);
 };
