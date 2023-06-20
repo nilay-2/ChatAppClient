@@ -4,23 +4,31 @@ import { Tooltip } from "@mui/material";
 import { connect } from "react-redux";
 import { getActions } from "../../store/actions/chatActions";
 import { joinGroup } from "../../realtimeCommunication/socketConnection";
+import { readGroupNotification } from "../../realtimeCommunication/socketConnection";
 function GroupListItem({ group, setChosenChatDetails, notifications }) {
   const chosenGroupDetails = (group) => {
     setChosenChatDetails(group, "GROUP");
     joinGroup(group);
   };
+
+  const readNotificationHandler = () => {
+    if (notifications.length > 0) {
+      readGroupNotification(notifications);
+    }
+  };
   return (
     <React.Fragment>
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative" }} onClick={readNotificationHandler}>
         {notifications.length ? (
           <div
             className="group_chat_notification_count"
             style={{
               position: "absolute",
-              height: "22px",
-              width: "22px",
-              right: "-5px",
-              bottom: "-5px",
+              border: "4px solid #202225",
+              height: "25px",
+              width: "25px",
+              right: "-8px",
+              bottom: "-8px",
               borderRadius: "50%",
               backgroundColor: "red",
               zIndex: 1,

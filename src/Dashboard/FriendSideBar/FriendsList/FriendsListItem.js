@@ -6,6 +6,7 @@ import OnlineIndicator from "./OnlineIndicator";
 import { getActions } from "../../../store/actions/chatActions";
 import { connect } from "react-redux";
 import ChatNotify from "./ChatNotify";
+import { readDirectChatNotification } from "../../../realtimeCommunication/socketConnection";
 function FriendsListItem({
   disabled = false,
   isOnline,
@@ -15,11 +16,11 @@ function FriendsListItem({
   currentUserId = "",
   activeStatus,
   notifications = [],
-  sendReadNotificationRequest,
 }) {
   const handleChatDetails = () => {
     setChosenChatDetails({ id, username }, "DIRECT");
-    sendReadNotificationRequest(notifications);
+    console.log(notifications);
+    readDirectChatNotification(notifications);
   };
   return (
     <div>

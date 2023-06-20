@@ -204,17 +204,3 @@ export const markAllNotificationsAsRead = async () => {
     };
   }
 };
-
-export const sendReadNotificationReq = async (notifications) => {
-  try {
-    return await apiClient.delete("/notification/chat/markAllAsRead", {
-      withCredentials: true,
-      data: { arrayOfIds: notifications },
-    });
-  } catch (error) {
-    return {
-      error: true,
-      exception: error,
-    };
-  }
-};

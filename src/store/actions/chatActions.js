@@ -56,8 +56,6 @@ export const getActions = (dispatch) => {
     updatemarkAllAsReadUi: () => dispatch(updatemarkAllAsReadUi()),
     readNotification: (notifications) =>
       dispatch(readNotification(notifications)),
-    sendReadNotificationRequest: (notifications) =>
-      dispatch(sendReadNotificationRequest(notifications)),
   };
 };
 
@@ -243,18 +241,6 @@ const readNotification = (notifications) => {
   return {
     type: chatActions.READ_NOTIFICATION,
     notifications,
-  };
-};
-
-const sendReadNotificationRequest = (notifications) => {
-  return async (dispatch) => {
-    const response = await api.sendReadNotificationReq(notifications);
-    // console.log(response);
-    if (response.data?.status === "success") {
-      dispatch(readNotification(notifications));
-    } else if (response?.exception) {
-      console.log(response.exception.response.data.message);
-    }
   };
 };
 

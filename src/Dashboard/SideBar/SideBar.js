@@ -15,9 +15,6 @@ const MainContainer = styled("div")({
 });
 
 function SideBar({ groups, groupNotifications }) {
-  useEffect(() => {
-    console.log(groupNotifications);
-  }, [groupNotifications]);
   return (
     <MainContainer>
       <MainPageButton />
