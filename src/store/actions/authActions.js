@@ -28,7 +28,7 @@ const login = (userDetails, navigate) => {
   return async (dispatch) => {
     const response = await api.login(userDetails);
     if (response.error) {
-      dispatch(openAlertMessage(response?.exception?.response?.data?.err));
+      dispatch(openAlertMessage(response.exception.response.data?.message));
     } else {
       const { user, token } = response?.data;
       user.token = token;
@@ -46,7 +46,7 @@ const register = (userDetails, navigate) => {
   return async (dispatch) => {
     const response = await api.register(userDetails);
     if (response.error) {
-      dispatch(openAlertMessage(response?.exception?.response?.data?.err));
+      dispatch(openAlertMessage(response.exception.response.data?.message));
     } else {
       const { user, token } = response?.data;
       user.token = token;
@@ -64,9 +64,9 @@ const logout = () => {
     localStorage.removeItem("user");
     const response = await api.logout();
     if (response.error) {
-      dispatch(openAlertMessage(response?.exception?.response?.data?.message));
+      dispatch(openAlertMessage(response.exception.response.data?.message));
     } else {
-      dispatch(openAlertMessage(response?.data?.message));
+      dispatch(openAlertMessage(response.data?.message));
       window.location.href = `${
         process.env.NODE_ENV === "development"
           ? devFrontEndUrl
@@ -81,7 +81,7 @@ const verifyUsersBeforeEnteringDashboard = (navigate) => {
     const response = await api.protectRoute();
     if (response.error) {
       // console.log(response);
-      dispatch(openAlertMessage(response?.expection?.response?.data?.message));
+      dispatch(openAlertMessage(response.expection.response.data?.message));
       navigate("/login");
       return false;
     } else {

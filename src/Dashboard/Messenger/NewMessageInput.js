@@ -4,9 +4,7 @@ import { connect } from "react-redux";
 import {
   directMessageHandler,
   sendGroupMessage,
-  sendTypingIndicatorEvent,
 } from "../../realtimeCommunication/socketConnection";
-import store from "../../store/store";
 import { getActions } from "../../store/actions/chatActions";
 import "../../css/replyMessageDialog.css";
 import { IconButton } from "@mui/material";
@@ -14,9 +12,14 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../../firebase";
-import b64toBlob from "b64-to-blob";
 import OpenFileDialogBox from "../../shared/components/OpenFileDialogBox";
 import ImageFilePreview from "../../shared/components/ImageFilePreview";
+import TypingIndicator from "./TypingIndicator";
+import {
+  sendTypingIndicatorEvent,
+  stopTypingIndicator,
+} from "../../realtimeCommunication/socketConnection";
+import { getSocketInstance } from "../../shared/utils/socketStore";
 const Input = styled("input")({
   backgroundColor: "#202225",
   color: "#fff",
@@ -25,6 +28,16 @@ const Input = styled("input")({
   padding: "10px",
   borderBottomLeftRadius: "15px",
   borderBottomRightRadius: "15px",
+});
+
+const InputContainer = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+});
+
+const TypingIndicatorContainer = styled("div")({
+  height: "30px",
 });
 
 function NewMessageInput({
@@ -40,6 +53,33 @@ function NewMessageInput({
   const [openFileUploadDialog, setOpenFileUploadDialog] = useState(false);
 
   const [imageName, setImageName] = useState(null);
+
+  const [isTyping, setIsTyping] = useState(false);
+
+  const [typerName, setTyperName] = useState("");
+
+  // typing indicator
+  useEffect(() => {
+    const socket = getSocketInstance();
+    socket.on("receive_typing_indicator", (data) => {
+      setIsTyping(true);
+      setTyperName(data);
+    });
+
+    socket.on("receive_stop_typing_indicator", (data) => {
+      setIsTyping(false);
+      setTyperName(null);
+    });
+
+    return () => {
+      socket.off("receive_typing_indicator");
+
+      socket.off("receive_stop_typing_indicator");
+    };
+  }, []);
+  const handleTypingIndicator = (val) => {
+    setIsTyping(val);
+  };
 
   // input ref
   const inputRef = useRef(null);
@@ -177,11 +217,17 @@ function NewMessageInput({
       setOpenFileUploadDialog(false);
       setFile(null);
     } else {
-      // logic for typing indicator
-      const sender = store.getState().auth.userDetails?.name;
-      const data = { ...chosenChatDetails, chatType, sender };
-      sendTypingIndicatorEvent(data);
+      sendTypingIndicatorEvent();
+      setTimeout(() => {
+        stopTypingIndicator();
+      }, 3000);
     }
+    // else {
+    //   // logic for typing indicator
+    //   const sender = store.getState().auth.userDetails?.name;
+    //   const data = { ...chosenChatDetails, chatType, sender };
+    //   sendTypingIndicatorEvent(data);
+    // }
   };
 
   const clearInput = () => {
@@ -229,7 +275,12 @@ function NewMessageInput({
       ) : (
         ""
       )}
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "end",
+        }}
+      >
         <div className="file-uploader-container">
           {openFileUploadDialog ? (
             <OpenFileDialogBox setFile={setFile} setImageName={setImageName} />
@@ -242,21 +293,30 @@ function NewMessageInput({
             />
           </IconButton>
         </div>
-        <Input
-          ref={inputRef}
-          placeholder={
-            chatType === "DIRECT"
-              ? `Message @${chosenChatDetails.username}`
-              : `Message @${chosenChatDetails.groupName}`
-          }
-          value={message}
-          onChange={handleOnChange}
-          onKeyDown={handleOnKeyDown}
-          sx={{
-            borderTopRightRadius: `${replyToMessage !== null ? "0px" : "15px"}`,
-            borderTopLeftRadius: `${replyToMessage !== null ? "0px" : "15px"}`,
-          }}
-        />
+        <InputContainer>
+          <TypingIndicatorContainer>
+            {isTyping ? <TypingIndicator typerName={typerName} /> : ""}
+          </TypingIndicatorContainer>
+          <Input
+            ref={inputRef}
+            placeholder={
+              chatType === "DIRECT"
+                ? `Message @${chosenChatDetails.username}`
+                : `Message @${chosenChatDetails.groupName}`
+            }
+            value={message}
+            onChange={handleOnChange}
+            onKeyDown={handleOnKeyDown}
+            sx={{
+              borderTopRightRadius: `${
+                replyToMessage !== null ? "0px" : "15px"
+              }`,
+              borderTopLeftRadius: `${
+                replyToMessage !== null ? "0px" : "15px"
+              }`,
+            }}
+          />
+        </InputContainer>
       </div>
     </div>
   );

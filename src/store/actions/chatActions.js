@@ -12,7 +12,7 @@ export const chatActions = {
   SET_MESSAGES: "CHAT.SET_MESSAGES",
   CLEAR_MESSAGES: "CLEAR_MESSAGES",
   SET_PARTICIPANTS: "SET_PARTICIPANTS",
-  TOGGLE_TYPING_INDICATOR: "TOGGLE_TYPING_INDICATOR",
+  // TOGGLE_TYPING_INDICATOR: "TOGGLE_TYPING_INDICATOR",
   APPEND_MESSAGE: "APPEND_MESSAGE",
   SET_REPLY_MESSAGE: "SET_REPLY_MESSAGE",
   SET_DELETE_MESSAGE: "SET_DELETE_MESSAGE",
@@ -39,8 +39,8 @@ export const getActions = (dispatch) => {
       dispatch(clearMessagesBeforeNextChat(loadingStatus)),
     getInitialGroupChatHistory: (groupId) =>
       dispatch(getInitialGroupChatHistory(groupId)),
-    toggleTypingIndicator: (sender, state) =>
-      dispatch(toggleTypingIndicator(sender, state)),
+    // toggleTypingIndicator: (sender, state) =>
+    //   dispatch(toggleTypingIndicator(sender, state)),
     setreplyToMessage: (message) => dispatch(setReplyToMessage(message)),
     setDeleteMessage: (message) => dispatch(setDeleteMessage(message)),
     deleteMessage: () => dispatch(deleteMessage()),
@@ -67,13 +67,13 @@ export const setChosenChatDetails = (chatDetails, chatType) => {
   };
 };
 
-export const toggleTypingIndicator = (sender, state) => {
-  return {
-    type: chatActions.TOGGLE_TYPING_INDICATOR,
-    sender,
-    state,
-  };
-};
+// export const toggleTypingIndicator = (sender, state) => {
+//   return {
+//     type: chatActions.TOGGLE_TYPING_INDICATOR,
+//     sender,
+//     state,
+//   };
+// };
 
 export const setMessages = (messages) => {
   // console.log(messages);
