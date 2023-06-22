@@ -1,9 +1,7 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import { styled } from "@mui/system";
 import { connect } from "react-redux";
-// import MessageHeader from "./MessageHeader";
 import Message from "./Message";
-// import dummyMessages from "./dummyMessages";
 import { getDateAndTime } from "../../shared/utils/dateFormatter";
 const MainContainer = styled("div")({
   height: "400px",
@@ -13,32 +11,20 @@ const MainContainer = styled("div")({
   alignItems: "center",
 });
 
-function Messages({ chosenChatDetails, messages, replyToMessage }) {
-  // scroll to the bottom when the height of the box overflows to display the last message
-  // console.log("date for first message: ", messages[0]?.date);
-  // console.log("date of previous element", messages[-1]?.date);
-  // if (messages[0]?.date === messages[-1]?.date) console.log(true);
-  // else console.log(false);
-
+function Messages({ chosenChatDetails, messages, replyToMessage, chatType }) {
   const bottomRef = useRef(null);
 
   const [highlightElement, setHighlightElement] = useState(null);
 
-  // console.log(highlightElement);
-
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behaviour: "smooth" });
+    bottomRef.current?.scrollIntoView();
+    // bottomRef.current?.scrollIntoView({ behaviour: "smooth" });
   }, [messages]);
 
   return (
-    <MainContainer
-    //  style={{ scrollBehavior: "smooth" }}
-    >
-      {/*always give smooth-scroll property to the element which has a scroll bar */}
-      {/*<MessageHeader name={chosenChatDetails?.username} />*/}
+    <MainContainer>
       {messages !== undefined
         ? messages?.map((msg, i) => {
-            // console.log(msg.date);
             const sameAuthor =
               i > 0 &&
               messages[i].author?._id.toString() ===
@@ -52,7 +38,7 @@ function Messages({ chosenChatDetails, messages, replyToMessage }) {
                 getDateAndTime(messages[i - 1]?.date, "date")
                 ? true
                 : false;
-            // console.log(sameDay);
+
             return (
               <Message
                 key={msg?._id}

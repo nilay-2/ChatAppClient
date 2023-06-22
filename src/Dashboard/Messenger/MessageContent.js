@@ -5,7 +5,7 @@ import Messages from "./Messages";
 import { connect } from "react-redux";
 import { getActions } from "../../store/actions/chatActions";
 import store from "../../store/store";
-import Loading from "../../shared/components/Loading";
+// import Loading from "../../shared/components/Loading";
 import ChatLoading from "../../shared/components/ChatLoading";
 const Wrapper = styled("div")({
   flexGrow: 1,
@@ -23,7 +23,7 @@ function MessageContent({
   getInitialChatHistory,
   getInitialGroupChatHistory,
   chatType,
-  typingIndicator,
+  // typingIndicator,
   isLoading,
 }) {
   useEffect(() => {
@@ -50,7 +50,7 @@ function MessageContent({
         <Wrapper className="messageContentWrapper">
           <Messages chosenChatDetails={chosenChatDetails} messages={messages} />
           <InputWrapper>
-            <TypingIndicatorContainer>
+            {/*<TypingIndicatorContainer>
               {typingIndicator.toggleState ? (
                 <div
                   style={{
@@ -71,7 +71,7 @@ function MessageContent({
               ) : (
                 ""
               )}
-            </TypingIndicatorContainer>
+              </TypingIndicatorContainer>*/}
             <NewMessageInput />
           </InputWrapper>
         </Wrapper>

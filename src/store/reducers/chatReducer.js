@@ -5,10 +5,10 @@ const initState = {
   chosenChatDetails: null,
   chatType: null,
   isLoading: null,
-  typingIndicator: {
-    sender: "",
-    toggleState: null,
-  },
+  // typingIndicator: {
+  //   sender: "",
+  //   toggleState: null,
+  // },
   replyToMessage: null,
   messageToDelete: null,
   invtNotifications: [],
@@ -34,15 +34,15 @@ const reducer = (state = initState, action) => {
         ...state,
         isLoading: action.loadingStatus,
       };
-    case chatActions.TOGGLE_TYPING_INDICATOR:
-      return {
-        ...state,
-        typingIndicator: {
-          ...state.typingIndicator,
-          sender: action.sender,
-          toggleState: action.state,
-        },
-      };
+    // case chatActions.TOGGLE_TYPING_INDICATOR:
+    //   return {
+    //     ...state,
+    //     typingIndicator: {
+    //       ...state.typingIndicator,
+    //       sender: action.sender,
+    //       toggleState: action.state,
+    //     },
+    //   };
     case chatActions.APPEND_MESSAGE:
       return {
         ...state,

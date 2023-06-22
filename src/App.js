@@ -14,7 +14,6 @@ function App() {
           <Route path="/login" exact element={<Login />} />
           <Route path="/register" exact element={<Register />} />
           <Route path="/" exact element={<Dashboard />} />
-          {/*<Route path="/loading" exact element={<Loading />} />*/}
         </Routes>
       </Router>
       <AlertNotification />

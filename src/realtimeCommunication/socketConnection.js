@@ -7,7 +7,7 @@ import {
 } from "../store/actions/friendsActions";
 import {
   appendMessage,
-  toggleTypingIndicator,
+  // toggleTypingIndicator,
   setInvtNotifications,
   setMessageNotification,
   appendMessageNotification,
@@ -19,6 +19,8 @@ import {
 import store from "../store/store";
 import { setGroupList } from "../store/actions/groupChatActions";
 import { devBackEndUrl, prodBackEndUrl } from "../shared/utils/url";
+import { isMessageFromSelectedEntity } from "../shared/utils/isMessageFromSelectedUser";
+import { setSocket, getSocketInstance } from "../shared/utils/socketStore";
 let socket = null;
 
 export const connectWithSocketServer = (userDetails) => {
@@ -32,6 +34,8 @@ export const connectWithSocketServer = (userDetails) => {
       },
     }
   );
+
+  setSocket(socket);
 
   socket.on("connect", () => {
     // console.log("successfully connected with socket.io server");
@@ -63,22 +67,34 @@ export const connectWithSocketServer = (userDetails) => {
   });
 
   socket.on("realTimeChatUpdate", (data) => {
+    /*Old code 
+    // // if user is chatting with someone else
+    // if (
+    //   store.getState().chat.chosenChatDetails &&
+    //   store.getState().chat.chosenChatDetails?.id !== data.author?._id && // this will give notification to both the sender and the receiver which we dont want
+    //   store.getState().auth.userDetails?._id !== data.author?._id // author and the other logged-in person should be different or else both will receive the notification
+    // ) {
+    //   // console.log("true");
+    //   sendChatNotification(socket, data);
+    // } */
+
+    // -- refatored code
     // if user has not selected any chat
     if (!store.getState().chat.chosenChatDetails) {
-      // console.log(data);
       sendChatNotification(socket, data);
-    }
-    // if user is chatting with someone else
-    if (
-      store.getState().chat.chosenChatDetails &&
-      store.getState().chat.chosenChatDetails?.id !== data.author?._id && // this will give notification to both the sender and the receiver which we dont want
-      store.getState().auth.userDetails?._id !== data.author?._id // author and the other logged-in person should be different or else both will receive the notification
+    } else if (
+      isMessageFromSelectedEntity(
+        store.getState().auth,
+        store.getState().chat.chosenChatDetails,
+        data,
+        store.getState().chat.chatType
+      )
     ) {
-      // console.log("true");
-      console.log(data);
+      store.dispatch(appendMessage(data));
+    } else {
+      // if receiver has selected some else's chat
       sendChatNotification(socket, data);
     }
-    store.dispatch(appendMessage(data));
   });
 
   socket.on("recieve_group_message", (groupChatMessages) => {
@@ -86,30 +102,48 @@ export const connectWithSocketServer = (userDetails) => {
     const receiverId = store.getState().auth.userDetails._id;
     // user has not seletected any group chat
     const data = { groupChatMessages, receiverId };
-    if (!selectedChat && receiverId !== groupChatMessages.author?._id) {
-      // console.log(groupChatMessages);
+    /* Old code 
+    // if (!selectedChat && receiverId !== groupChatMessages.author?._id) {
+      //   // console.log(groupChatMessages);
+      //   sendGroupChatNotification(socket, data);
+      // }
+      
+      // // selected chat and receiving chat details are different
+      // if (selectedChat && selectedChat?._id !== groupChatMessages.groupId?._id) {
+        //   // console.log(groupChatMessages);
+        //   sendGroupChatNotification(socket, data);
+        // }*/
+
+    // -- refactored code
+
+    if (!selectedChat) {
+      sendGroupChatNotification(socket, data);
+    } else if (
+      isMessageFromSelectedEntity(
+        store.getState().auth,
+        store.getState().chat.chosenChatDetails,
+        groupChatMessages,
+        store.getState().chat.chatType
+      )
+    ) {
+      store.dispatch(appendMessage(groupChatMessages));
+    } else {
+      // if receiver has selected some other group to chat
       sendGroupChatNotification(socket, data);
     }
-
-    // selected chat and receiving chat details are different
-    if (selectedChat && selectedChat?._id !== groupChatMessages.groupId?._id) {
-      // console.log(groupChatMessages);
-      sendGroupChatNotification(socket, data);
-    }
-    store.dispatch(appendMessage(groupChatMessages));
   });
 
-  socket.on("received_typing_indicator_event", (senderDetails) => {
-    // console.log(senderDetails);
-    if (store.getState().chat.typingIndicator.toggleState !== true) {
-      store.dispatch(toggleTypingIndicator(senderDetails, true));
-    }
-    // console.log("hello");
-    setTimeout(() => {
-      store.dispatch(toggleTypingIndicator(senderDetails, false));
-      // console.log("typing stopped");
-    }, 2000);
-  });
+  // socket.on("received_typing_indicator_event", (senderDetails) => {
+  //   // console.log(senderDetails);
+  //   if (store.getState().chat.typingIndicator.toggleState !== true) {
+  //     store.dispatch(toggleTypingIndicator(senderDetails, true));
+  //   }
+  //   // console.log("hello");
+  //   setTimeout(() => {
+  //     store.dispatch(toggleTypingIndicator(senderDetails, false));
+  //     // console.log("typing stopped");
+  //   }, 2000);
+  // });
 
   socket.on("send_notification", (notifications) => {
     store.dispatch(setInvtNotifications(notifications));
@@ -136,6 +170,12 @@ export const connectWithSocketServer = (userDetails) => {
   socket.on("initial_group_notification_update", (groupChatNotifications) => {
     store.dispatch(setNotification(groupChatNotifications));
   });
+
+  // socket.on("receive_typing_indicator", (data) => {
+  //   if (store.getState().chat.chosenChatDetails?.username === data) {
+  //     console.log(data);
+  //   }
+  // });
 };
 
 export const directMessageHandler = (data) => {
@@ -153,13 +193,13 @@ export const sendGroupMessage = (data) => {
   socket?.emit("send_group_message", data);
 };
 
-export const sendTypingIndicatorEvent = (data) => {
-  socket?.emit("send_typing_indicator_event", data);
-};
+// export const sendTypingIndicatorEvent = (data) => {
+//   socket?.emit("send_typing_indicator_event", data);
+// };
 
-export const sendStopTypingIndicatorEvent = (data) => {
-  socket?.emit("send_stop_typing_indicator_event", data);
-};
+// export const sendStopTypingIndicatorEvent = (data) => {
+//   socket?.emit("send_stop_typing_indicator_event", data);
+// };
 
 // send chat notification
 const sendChatNotification = (socket, data) => {
@@ -178,4 +218,12 @@ export const readGroupNotification = (notifications) => {
 export const readDirectChatNotification = (notifications) => {
   const userId = store.getState().auth.userDetails?._id;
   socket?.emit("read_direct_chat_notification", { notifications, userId });
+};
+
+export const sendTypingIndicatorEvent = () => {
+  socket?.emit("typing", store.getState().auth.userDetails?.name);
+};
+
+export const stopTypingIndicator = () => {
+  socket?.emit("stop_typing", store.getState().auth.userDetails?.name);
 };
