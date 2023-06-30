@@ -13,10 +13,6 @@ const MainContainer = styled("div")({
   flexDirection: "column",
 });
 
-const AvatarContainer = styled("div")({
-  width: "70px",
-});
-
 const MessageContainer = styled("div")({
   marginLeft: "5px",
   width: "100%",

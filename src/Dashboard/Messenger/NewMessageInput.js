@@ -240,6 +240,9 @@ function NewMessageInput({
 
   return (
     <div>
+      <TypingIndicatorContainer>
+        {isTyping ? <TypingIndicator typerName={typerName} /> : ""}
+      </TypingIndicatorContainer>
       {replyToMessage !== null ? (
         <div
           style={{
@@ -294,9 +297,6 @@ function NewMessageInput({
           </IconButton>
         </div>
         <InputContainer>
-          <TypingIndicatorContainer>
-            {isTyping ? <TypingIndicator typerName={typerName} /> : ""}
-          </TypingIndicatorContainer>
           <Input
             ref={inputRef}
             placeholder={

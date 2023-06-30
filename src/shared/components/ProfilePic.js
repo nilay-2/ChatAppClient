@@ -11,6 +11,6 @@ const AvatarPreview = styled("img")({
   borderRadius: "50%",
 });
 
-export default function ProfilePic({ userImg }) {
-  return <AvatarPreview src={"/images/users/default.jpg"}></AvatarPreview>;
+export default function ProfilePic({ userDetails }) {
+  return <AvatarPreview src={userDetails?.photo}></AvatarPreview>;
 }

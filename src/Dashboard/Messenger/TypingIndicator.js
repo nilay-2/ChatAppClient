@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import Loading from "../../shared/components/Loading";
 import { styled } from "@mui/system";
-import store from "../../store/store";
 const LoaderContainer = styled("div")({
   display: "flex",
   color: "white",

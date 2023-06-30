@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../css/notificationListItem.css";
-import Avatar from "../components/Avatar";
+import Avatar from "./Avatar";
 import { IconButton } from "@mui/material";
 import NotificationMessage from "./NotificationMessage";
 import DoneIcon from "@mui/icons-material/Done";
