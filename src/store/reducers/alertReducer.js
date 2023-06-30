@@ -1,4 +1,4 @@
-import alertActions from "../actions/alertActions";
+import { alertActions } from "../actions/alertActions";
 const initState = {
   showAlertMessage: false,
   alertMessageContent: null,

@@ -26,7 +26,6 @@
   left: 10px;
   background-color: #111016;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
-  border-radius: 5px;
   padding: 6px;
 }
 
@@ -53,7 +52,7 @@
   left: 10px;
   color: white;
   cursor: pointer;
-  width: 100%;
+  width: auto;
 }
 
 .file-input-content {

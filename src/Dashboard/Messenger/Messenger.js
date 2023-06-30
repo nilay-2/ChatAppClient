@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { styled } from "@mui/system";
 import AppBar from "../AppBar/AppBar";
 import WelcomeMessage from "./WelcomeMessage";
-import { getActions } from "../../store/actions/chatActions";
 import { connect } from "react-redux";
 import MessageHeader from "./MessageHeader";
 import MessageContent from "./MessageContent";
@@ -14,7 +13,6 @@ const MainContainer = styled("div")({
   height: "auto",
   display: "flex",
   flexDirection: "column",
-  // justifyContent: "space-around",
 });
 
 function Messenger({ chosenChatDetails, chatType }) {

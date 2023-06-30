@@ -13,7 +13,7 @@ const MainContainer = styled("div")({
 function UserDetails({ userDetails }) {
   return (
     <MainContainer>
-      <ProfilePic />
+      <ProfilePic userDetails={userDetails} />
       <UserName name={userDetails?.name} />
       <UserSettings />
     </MainContainer>

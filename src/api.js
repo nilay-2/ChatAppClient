@@ -1,5 +1,9 @@
 import axios from "axios";
 import { devBackEndUrl, prodBackEndUrl } from "./shared/utils/url";
+import { toast } from "react-toastify";
+import { uploadBytes, getDownloadURL, ref } from "firebase/storage";
+import { storage } from "./firebase";
+import b64toBlob from "b64-to-blob";
 const apiClient = axios.create({
   baseURL: `${
     process.env.NODE_ENV === "development" ? devBackEndUrl : prodBackEndUrl
@@ -197,6 +201,74 @@ export const markAllNotificationsAsRead = async () => {
       { data: "notify" },
       { withCredentials: true }
     );
+  } catch (error) {
+    return {
+      error: true,
+      exception: error,
+    };
+  }
+};
+
+// upload profile picture
+
+export const uploadProfilePic = (imgFile) => {
+  return new Promise(async function (resolve, reject) {
+    try {
+      toast
+        .promise(
+          apiClient.post("/users/uploadProfileImg", imgFile, {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }),
+          {
+            pending: "Uploading profile picture...",
+            success: "Profile picture uploaded successfully!",
+            error: "Failed to upload profile picture",
+          }
+        )
+        .then((response) => {
+          if (response.data?.status === "success") {
+            const bufferData = response.data?.bufferData;
+            const blob = b64toBlob(bufferData.b64data, bufferData.contentType);
+            console.log(blob);
+            const imageRef = ref(storage, `users/${bufferData.fileName}`);
+            uploadBytes(imageRef, blob).then(() => {
+              getDownloadURL(imageRef).then((url) => resolve(url));
+            });
+          } else {
+            reject(response.response.data?.message);
+            // console.log(response.response.data?.message);
+          }
+        });
+    } catch (error) {
+      reject(error);
+      // console.log(error);
+    }
+  });
+};
+
+export const updatePFP = async (photoUrl) => {
+  try {
+    return await apiClient.patch(
+      "/users/updatePFP",
+      { photo: photoUrl },
+      { withCredentials: true }
+    );
+  } catch (error) {
+    return {
+      error: true,
+      exception: error,
+    };
+  }
+};
+
+export const updateNameAndEmail = async (data) => {
+  try {
+    return await apiClient.patch("/users/updateNameAndEmail", data, {
+      withCredentials: true,
+    });
   } catch (error) {
     return {
       error: true,
