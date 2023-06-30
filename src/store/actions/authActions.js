@@ -13,8 +13,8 @@ export const getActions = (dispatch) => {
     register: (userDetails, navigate) =>
       dispatch(register(userDetails, navigate)),
     setUserDetails: (userDetails) => dispatch(setUserDetails(userDetails)),
-    verifyUsersBeforeEnteringDashboard: () =>
-      dispatch(verifyUsersBeforeEnteringDashboard()),
+    verifyUsersBeforeEnteringDashboard: (navigate) =>
+      dispatch(verifyUsersBeforeEnteringDashboard(navigate)),
     logout: () => dispatch(logout()),
     setProfilePic: (url) => dispatch(setProfilePic(url)),
     updatePFP: (photoUrl) => dispatch(updatePFP(photoUrl)),
@@ -80,13 +80,14 @@ const logout = () => {
   };
 };
 
-export const verifyUsersBeforeEnteringDashboard = () => {
+export const verifyUsersBeforeEnteringDashboard = (navigate) => {
   return async (dispatch) => {
     const response = await api.protectRoute();
     if (response.error) {
       console.log("verification failed", response);
       dispatch(openAlertMessage(response.expection.response.data?.message));
       console.log(response);
+      navigate("/login");
       return { verified: false };
     } else {
       // console.log(response);

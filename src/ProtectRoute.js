@@ -4,11 +4,14 @@ import store from "./store/store";
 import { verifyUsersBeforeEnteringDashboard } from "./store/actions/authActions";
 import { connectWithSocketServer } from "./realtimeCommunication/socketConnection";
 import Login from "./authPages/LoginPage/Login";
-const ProtectRoute = ({ Component }) => {
+const ProtectRoute = ({ children }) => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const x = async () => {
-      const res = await store.dispatch(verifyUsersBeforeEnteringDashboard());
+      const res = await store.dispatch(
+        verifyUsersBeforeEnteringDashboard(navigate)
+      );
       if (res?.verified) {
         setIsLoggedIn(true);
         connectWithSocketServer(res?.user);
@@ -18,7 +21,9 @@ const ProtectRoute = ({ Component }) => {
     };
     x();
   }, []);
-  return isLoggedIn ? <Component /> : <Login />;
+  if (isLoggedIn) {
+    return children;
+  }
 };
 
 export default ProtectRoute;
