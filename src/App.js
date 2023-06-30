@@ -25,13 +25,21 @@ function App() {
           <Route
             path="/"
             exact
-            element={<ProtectRoute Component={Dashboard} />}
+            element={
+              <ProtectRoute>
+                <Dashboard />
+              </ProtectRoute>
+            }
           />
           <Route path="/register" exact element={<Register />} />
           <Route
             path="/@me"
             exact
-            element={<ProtectRoute Component={Profile} />}
+            element={
+              <ProtectRoute>
+                <Profile />
+              </ProtectRoute>
+            }
           />
           <Route path="/login" exact element={<Login />} />
         </Routes>
