@@ -18,6 +18,7 @@ export const getActions = (dispatch) => {
     logout: () => dispatch(logout()),
     setProfilePic: (url) => dispatch(setProfilePic(url)),
     updatePFP: (photoUrl) => dispatch(updatePFP(photoUrl)),
+    updatePassword: (data) => dispatch(updatePassword(data)),
   };
 };
 
@@ -85,9 +86,10 @@ export const verifyUsersBeforeEnteringDashboard = (navigate) => {
     const response = await api.protectRoute();
     if (response.error) {
       console.log("verification failed", response);
-      dispatch(openAlertMessage(response.expection.response.data?.message));
       console.log(response);
       navigate("/login");
+      // dispatch(openAlertMessage(response.expection.response.data?.message));
+      dispatch(openAlertMessage(response.expection.response.data?.message));
       return { verified: false };
     } else {
       // console.log(response);
@@ -128,5 +130,12 @@ export const updateNameAndEmailReduxStore = (data) => {
   return {
     type: authActions.SET_NAME_AND_EMAIL,
     data,
+  };
+};
+
+const updatePassword = (data) => {
+  return async (dispatch) => {
+    const response = await api.updatePassword(data);
+    return response;
   };
 };
