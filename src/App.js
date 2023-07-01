@@ -16,7 +16,6 @@ import { ToastContainer } from "react-toastify";
 // import { connectWithSocketServer } from "./realtimeCommunication/socketConnection";
 // import store from "./store/store";
 import ProtectRoute from "./ProtectRoute";
-
 function App() {
   return (
     <Fragment>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import store from "./store/store";
 import { verifyUsersBeforeEnteringDashboard } from "./store/actions/authActions";
 import { connectWithSocketServer } from "./realtimeCommunication/socketConnection";
-import Login from "./authPages/LoginPage/Login";
+import AppLoader from "./shared/components/AppLoader";
 const ProtectRoute = ({ children }) => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,6 +24,7 @@ const ProtectRoute = ({ children }) => {
   if (isLoggedIn) {
     return children;
   }
+  return <AppLoader />;
 };
 
 export default ProtectRoute;

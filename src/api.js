@@ -40,6 +40,21 @@ export const register = async (data) => {
   }
 };
 
+// update password
+
+export const updatePassword = async (data) => {
+  try {
+    return await apiClient.patch("/users/updatePassword", data, {
+      withCredentials: true,
+    });
+  } catch (error) {
+    return {
+      error: true,
+      exception: error,
+    };
+  }
+};
+
 export const sendFriendInvitation = async (data) => {
   try {
     return await apiClient.post("/friend-invitation/invite", data, {
