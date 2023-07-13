@@ -1,3 +1,21 @@
+# ChatSphere - Messaging Webapp
+
+Deployed Link: [https://chatsphereclient.netlify.app](https://chatsphereclient.netlify.app)
+
+## Key Features
+
+1. **Direct Chat**: Users can engage in one-on-one conversations with other users in real-time. The chat feature supports text-based messages, allowing users to have private conversations.
+
+2. **Group Chat**: ChatSphere also enables users to create and participate in group chats. Multiple users can join a group chat and exchange messages simultaneously, facilitating collaboration and team communication.
+
+3. **Online/Offline Presence**: Users' online or offline status is displayed in real-time, giving other users visibility into their availability for conversation.
+
+4. **Typing Indicator**: ChatSphere incorporates a typing indicator feature that displays when a user is currently typing a message. This real-time feedback enhances the overall chat experience, making conversations more fluid and responsive.
+
+5. **Chat Notifications**: Users receive notifications for new messages, friend invitations, and other relevant events. This feature ensures that users stay informed and can promptly respond to incoming messages.
+
+6. **File Sharing**: ChatSphere leverages Firebase's file storage capabilities, allowing users to share files with each other during conversations. Users can easily upload and download files, enhancing collaboration and information exchange.
+
 # Getting Started with Create React App and Redux
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
