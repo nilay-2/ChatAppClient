@@ -207,6 +207,7 @@ const sendChatNotification = (socket, data) => {
 };
 
 const sendGroupChatNotification = (socket, data) => {
+  console.log(data);
   socket.emit("send_groupChat_notification", data);
 };
 
