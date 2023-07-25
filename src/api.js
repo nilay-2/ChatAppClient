@@ -15,14 +15,11 @@ const apiClient = axios.create({
 });
 
 export const login = async (data) => {
+  console.log(data);
   try {
-    return await apiClient.post(
-      "/users/login",
-      data
-      //  {
-      //   withCredentials: true,
-      // }
-    );
+    return await apiClient.post("/users/login", data, {
+      withCredentials: true,
+    });
   } catch (error) {
     return {
       error: true,
@@ -33,13 +30,9 @@ export const login = async (data) => {
 
 export const register = async (data) => {
   try {
-    return await apiClient.post(
-      "/users/signUp",
-      data
-      // {
-      //   withCredentials: true,
-      // }
-    );
+    return await apiClient.post("/users/signUp", data, {
+      withCredentials: true,
+    });
   } catch (error) {
     return {
       error: true,
