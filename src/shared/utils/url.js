@@ -6,3 +6,4 @@ export const devFrontEndUrl = "http://localhost:3000";
 
 export const prodBackEndUrl = "https://chatserver-bs6i.onrender.com";
 export const prodFrontEndUrl = "https://chatsphereclient.netlify.app";
+// added url for render.com
