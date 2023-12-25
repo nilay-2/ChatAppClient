@@ -40,6 +40,8 @@ const TypingIndicatorContainer = styled("div")({
   height: "30px",
 });
 
+let typingTimeout;
+
 function NewMessageInput({
   chosenChatDetails,
   chatType,
@@ -217,9 +219,11 @@ function NewMessageInput({
       setOpenFileUploadDialog(false);
       setFile(null);
     } else {
+      clearTimeout(typingTimeout);
       sendTypingIndicatorEvent();
-      setTimeout(() => {
+      typingTimeout = setTimeout(() => {
         stopTypingIndicator();
+        console.log("typing stopped");
       }, 3000);
     }
     // else {
