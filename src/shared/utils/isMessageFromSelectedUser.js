@@ -28,11 +28,11 @@ export const isMessageFromSelectedEntity = (
 
       // the message is going to be sent to both the sender and the reciever
 
-      if (currUserId === authorId) return true; // condition for sender
+      if (currUserId === authorId) return true; // condition for sender // append message in ui
 
-      if (selectedEntityId === authorId) return true; // condition for receiver
+      if (selectedEntityId === authorId) return true; // condition for receiver // append message in ui
 
-      if (selectedEntity !== authorId) return false; // condition for receiver
+      if (selectedEntity !== authorId) return false; // condition for receiver // send notification
 
     case "GROUP":
       // get current selected group id
