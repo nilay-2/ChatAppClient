@@ -56,7 +56,7 @@ export const connectWithSocketServer = (userDetails) => {
 
   socket.on("onlineUsers", (data) => {
     const { onlineUsers } = data;
-    // console.log(onlineUsers);
+    console.log(onlineUsers);
     store.dispatch(setOnlineUsers(onlineUsers));
     store.dispatch(checkIfFriendIsOnline());
   });
