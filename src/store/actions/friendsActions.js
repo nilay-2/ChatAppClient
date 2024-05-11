@@ -18,6 +18,9 @@ export const getActions = (dispatch) => {
     rejectFriendInvitation: (data) => {
       dispatch(rejectFriendInvitation(data));
     },
+    getFriends: () => {
+      dispatch(getFriendsAction());
+    },
   };
 };
 
@@ -81,20 +84,22 @@ const rejectFriendInvitation = (data) => {
   };
 };
 
+const getFriendsAction = () => {
+  return async (dispatch) => {
+    const response = await api.getFriends();
+
+    if (response.error) {
+      dispatch(openAlertMessage(response.exception?.response?.data.message));
+    } else {
+      const friends = response.data.friends;
+      // console.log(friends);
+      dispatch(setFriends(friends));
+    }
+  };
+};
+
 export const checkIfFriendIsOnline = () => {
   return {
     type: friendsActions.SET_ONLINE_FRIENDS,
   };
 };
-
-// const checkIfFriendIsOnline = (friends, onlineUsers) => {
-//   return (dispatch) => {
-//     friends.forEach((frnd) => {
-//       const onlnFrnd = onlineUsers.find(
-//         (user) => user.userId === frnd.friendId._id
-//       );
-//       frnd.isOnline = onlnFrnd ? true : false;
-//     });
-//     return friends;
-//   }
-// }

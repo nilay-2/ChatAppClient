@@ -95,6 +95,19 @@ export const protectRoute = async () => {
   }
 };
 
+export const getFriends = async () => {
+  try {
+    return await apiClient.get("/friends/", {
+      withCredentials: true,
+    });
+  } catch (error) {
+    return {
+      error: error,
+      exception: error,
+    };
+  }
+};
+
 export const acceptFriendInvitation = async (data) => {
   try {
     return await apiClient.post("/friend-invitation/accept", data, {

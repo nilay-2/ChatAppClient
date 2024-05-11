@@ -4,11 +4,9 @@ const initState = {
   friends: [],
   pendingFriendsInvitations: [],
   onlineUsers: [],
-  onlineFriends: [],
 };
 
 const reducer = (state = initState, action) => {
-  // console.log(action.pendingFriendsInvitations);
   switch (action.type) {
     case friendsActions.SET_PENDING_FRIENDS_INVITATION:
       return {
@@ -34,10 +32,9 @@ const reducer = (state = initState, action) => {
         // frnd.isOnline = f ? true : false
         return { ...frnd, isOnline: f ? true : false };
       });
-      // console.log(myOnlineFriends);
       return {
         ...state,
-        onlineFriends: myOnlineFriends,
+        friends: myOnlineFriends,
       };
     default:
       return state;

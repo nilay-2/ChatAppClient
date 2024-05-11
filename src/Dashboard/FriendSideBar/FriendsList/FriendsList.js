@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/system";
 import FriendsListItem from "./FriendsListItem";
 import { connect } from "react-redux";
@@ -13,10 +13,14 @@ const MainContainer = styled("div")({
   marginBottom: "15px",
 });
 
-function FriendsList({ onlineFriends }) {
+function FriendsList({ friends, getFriends }) {
+  useEffect(() => {
+    getFriends();
+  }, []);
+
   return (
     <MainContainer>
-      {onlineFriends?.map((f, i) => {
+      {friends?.map((f, i) => {
         return (
           <FriendsListItem
             username={f.friendId?.name}

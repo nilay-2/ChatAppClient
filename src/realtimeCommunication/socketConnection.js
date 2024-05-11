@@ -1,13 +1,11 @@
 import io from "socket.io-client";
 import {
   setPendingFriendsInvitations,
-  setFriends,
   setOnlineUsers,
   checkIfFriendIsOnline,
 } from "../store/actions/friendsActions";
 import {
   appendMessage,
-  // toggleTypingIndicator,
   setInvtNotifications,
   setMessageNotification,
   appendMessageNotification,
@@ -20,7 +18,7 @@ import store from "../store/store";
 import { setGroupList } from "../store/actions/groupChatActions";
 import { devBackEndUrl, prodBackEndUrl } from "../shared/utils/url";
 import { isMessageFromSelectedEntity } from "../shared/utils/isMessageFromSelectedUser";
-import { setSocket, getSocketInstance } from "../shared/utils/socketStore";
+import { setSocket } from "../shared/utils/socketStore";
 let socket = null;
 
 export const connectWithSocketServer = (userDetails) => {
@@ -44,25 +42,16 @@ export const connectWithSocketServer = (userDetails) => {
 
   socket.on("friends-invitations", (data) => {
     const { pendingInvitations } = data;
-    // console.log(pendingInvitations);
     store.dispatch(setPendingFriendsInvitations(pendingInvitations));
-  });
-
-  socket.on("friends-list", (data) => {
-    const { friends } = data;
-    // console.log(friends);
-    store.dispatch(setFriends(friends));
   });
 
   socket.on("onlineUsers", (data) => {
     const { onlineUsers } = data;
-    // console.log(onlineUsers);
     store.dispatch(setOnlineUsers(onlineUsers));
     store.dispatch(checkIfFriendIsOnline());
   });
 
   socket.on("groupList", ({ groups }) => {
-    // console.log(groups);
     store.dispatch(setGroupList(groups));
   });
 
