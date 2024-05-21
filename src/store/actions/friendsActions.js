@@ -5,6 +5,7 @@ export const friendsActions = {
   SET_PENDING_FRIENDS_INVITATION: "FRIENDS.SET_PENDING_FRIENDS_INVITATION",
   SET_ONLINE_USERS: "FRIENDS.SET_ONLINE_USERS",
   SET_ONLINE_FRIENDS: "FRIENDS.SET_ONLINE_FRIENDS",
+  SET_NEW_ORDER: "FRIENDS.SET_NEW_ORDER",
 };
 
 export const getActions = (dispatch) => {
@@ -36,6 +37,13 @@ export const setFriends = (friends) => {
   return {
     type: friendsActions.SET_FRIENDS,
     friends,
+  };
+};
+
+export const changeFrndsListOrder = (frndId) => {
+  return {
+    type: friendsActions.SET_NEW_ORDER,
+    frndId,
   };
 };
 

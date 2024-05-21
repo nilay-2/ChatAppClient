@@ -36,6 +36,23 @@ const reducer = (state = initState, action) => {
         ...state,
         friends: myOnlineFriends,
       };
+
+    case friendsActions.SET_NEW_ORDER:
+      const frndCopy = [...state.friends]; // creating copy of original state array
+
+      let frndIndex;
+      state.friends.forEach((frnd, i) => {
+        if (frnd.friendId._id === action.frndId) {
+          frndIndex = i;
+          return;
+        }
+      });
+      frndCopy.unshift(frndCopy.splice(frndIndex, 1)[0]); // mutating copy of array
+      return {
+        ...state,
+        friends: frndCopy,
+      };
+
     default:
       return state;
   }

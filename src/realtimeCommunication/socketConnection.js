@@ -3,6 +3,8 @@ import {
   setPendingFriendsInvitations,
   setOnlineUsers,
   checkIfFriendIsOnline,
+  setFriends,
+  changeFrndsListOrder,
 } from "../store/actions/friendsActions";
 import {
   appendMessage,
@@ -43,6 +45,12 @@ export const connectWithSocketServer = (userDetails) => {
   socket.on("friends-invitations", (data) => {
     const { pendingInvitations } = data;
     store.dispatch(setPendingFriendsInvitations(pendingInvitations));
+  });
+
+  socket.on("friends-list", (data) => {
+    const { friends } = data;
+    // console.log(friends);
+    store.dispatch(setFriends(friends));
   });
 
   socket.on("onlineUsers", (data) => {
@@ -122,24 +130,15 @@ export const connectWithSocketServer = (userDetails) => {
     }
   });
 
-  // socket.on("received_typing_indicator_event", (senderDetails) => {
-  //   // console.log(senderDetails);
-  //   if (store.getState().chat.typingIndicator.toggleState !== true) {
-  //     store.dispatch(toggleTypingIndicator(senderDetails, true));
-  //   }
-  //   // console.log("hello");
-  //   setTimeout(() => {
-  //     store.dispatch(toggleTypingIndicator(senderDetails, false));
-  //     // console.log("typing stopped");
-  //   }, 2000);
-  // });
-
   socket.on("send_notification", (notifications) => {
     store.dispatch(setInvtNotifications(notifications));
   });
   // receive chat notification
   socket.on("receive_chat_notification", (chatNotification) => {
     console.log(chatNotification);
+    // change the order of friends list
+    store.dispatch(changeFrndsListOrder(chatNotification.messageId?.author));
+
     store.dispatch(appendMessageNotification(chatNotification));
   });
 

@@ -20,6 +20,8 @@ import {
   stopTypingIndicator,
 } from "../../realtimeCommunication/socketConnection";
 import { getSocketInstance } from "../../shared/utils/socketStore";
+import { changeFrndsListOrder } from "../../store/actions/friendsActions";
+import store from "../../store/store";
 const Input = styled("input")({
   backgroundColor: "#202225",
   color: "#fff",
@@ -150,6 +152,7 @@ function NewMessageInput({
             date: new Date(),
           };
           directMessageHandler(data);
+          store.dispatch(changeFrndsListOrder(chosenChatDetails.id)); // change the order of the friends list in the UI
         } else if (replyToMessage !== null) {
           const data = {
             chatType,
@@ -163,6 +166,7 @@ function NewMessageInput({
             },
           };
           directMessageHandler(data);
+          store.dispatch(changeFrndsListOrder(chosenChatDetails.id)); // change the order of the friends list in the UI
           setreplyToMessage(null);
         }
       }
@@ -204,6 +208,7 @@ function NewMessageInput({
           },
         };
         uploadFileToChat(data);
+        store.dispatch(changeFrndsListOrder(chosenChatDetails.id)); // change the order of the friends list in the UI
       } else if (chatType === "GROUP") {
         const data = {
           ...chosenChatDetails,
@@ -226,12 +231,6 @@ function NewMessageInput({
         console.log("typing stopped");
       }, 3000);
     }
-    // else {
-    //   // logic for typing indicator
-    //   const sender = store.getState().auth.userDetails?.name;
-    //   const data = { ...chosenChatDetails, chatType, sender };
-    //   sendTypingIndicatorEvent(data);
-    // }
   };
 
   const clearInput = () => {
