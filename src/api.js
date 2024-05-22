@@ -1,5 +1,10 @@
 import axios from "axios";
-import { devBackEndUrl, prodBackEndUrl } from "./shared/utils/url";
+import {
+  devBackEndUrl,
+  devFrontEndUrl,
+  prodBackEndUrl,
+  prodFrontEndUrl,
+} from "./shared/utils/url";
 import { toast } from "react-toastify";
 import { uploadBytes, getDownloadURL, ref } from "firebase/storage";
 import { storage } from "./firebase";
@@ -10,7 +15,8 @@ const apiClient = axios.create({
   }/api`,
   timeout: 5000,
   headers: {
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin":
+      process.env.NODE_ENV === "development" ? devFrontEndUrl : prodFrontEndUrl,
   },
 });
 
