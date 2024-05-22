@@ -18,7 +18,6 @@ function FriendsListItem({
   activeStatus,
   notifications = [],
 }) {
-  console.log(activeStatus);
   const handleChatDetails = () => {
     setSelectedItem(id);
     setChosenChatDetails({ id, username }, "DIRECT");
