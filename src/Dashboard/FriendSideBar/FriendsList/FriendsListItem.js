@@ -14,12 +14,15 @@ function FriendsListItem({
   id,
   setChosenChatDetails,
   currentUserId = "",
+  setSelectedItem,
   activeStatus,
   notifications = [],
 }) {
+  console.log(activeStatus);
   const handleChatDetails = () => {
+    setSelectedItem(id);
     setChosenChatDetails({ id, username }, "DIRECT");
-    console.log(notifications);
+    // console.log(notifications);
     readDirectChatNotification(notifications);
   };
   return (

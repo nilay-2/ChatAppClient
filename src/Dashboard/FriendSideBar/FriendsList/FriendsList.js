@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import FriendsListItem from "./FriendsListItem";
 import { connect } from "react-redux";
@@ -14,9 +14,13 @@ const MainContainer = styled("div")({
 });
 
 function FriendsList({ friends, getFriends }) {
+  const [selectedItem, setSelectedItem] = useState(null);
+
   useEffect(() => {
     getFriends();
   }, []);
+
+  console.log(selectedItem);
 
   return (
     <MainContainer>
@@ -31,12 +35,8 @@ function FriendsList({ friends, getFriends }) {
               store.getState().chat.messageNotification,
               f.friendId?._id
             )}
-            activeStatus={
-              store.getState().chat.chosenChatDetails?.username ===
-              f.friendId?.name
-                ? true
-                : false
-            }
+            setSelectedItem={setSelectedItem}
+            activeStatus={selectedItem === f.friendId?._id ? true : false}
           />
         );
       })}
