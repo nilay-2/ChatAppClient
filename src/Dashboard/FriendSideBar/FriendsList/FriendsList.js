@@ -20,8 +20,6 @@ function FriendsList({ friends, getFriends }) {
     getFriends();
   }, []);
 
-  console.log(selectedItem);
-
   return (
     <MainContainer>
       {friends?.map((f, i) => {
