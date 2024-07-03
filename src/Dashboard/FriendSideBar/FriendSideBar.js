@@ -1,10 +1,12 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { styled } from "@mui/system";
 import AddFriendButton from "./AddFriendButton";
 import FriendsTitle from "./FriendsTitle";
 import PendingInvitationList from "./PendingInvationsList/PendingInvitationList";
-import FriendsList from "./FriendsList/FriendsList";
+// import FriendsList from "./FriendsList/FriendsList";
 import UserDetails from "./UserDetails/UserDetails";
+
+const FriendsList = lazy(() => import("./FriendsList/FriendsList"));
 const MainContainer = styled("div")({
   // width: "224px",
   minWidth: "250px",
@@ -22,7 +24,13 @@ export default function FriendSideBar() {
     <MainContainer>
       <AddFriendButton />
       <FriendsTitle title="Private messages" align="center" />
-      <FriendsList />
+      <Suspense
+        fallback={
+          <p style={{ color: "#f3f3f3", textAlign: "center" }}>Loading....</p>
+        }
+      >
+        <FriendsList />
+      </Suspense>
       <FriendsTitle title="Invitations" align="center" />
       <PendingInvitationList />
       <UserDetails />
